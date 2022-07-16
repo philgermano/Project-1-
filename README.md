@@ -42,3 +42,24 @@ for movment initial
 
 
 accomplished
+grid map from tileset
+player 1 movement
+
+
+
+
+
+
+//resources
+https://opengameart.org/content/bomb-party-the-second-expansion
+game sprite sheet 16x16 7 high 15 wide
+
+
+TO DO when back.
+
+set bomb to be drawn. can be on player layer or maybe a bomb canvas  
+
+will need to figure out if player should have a bomb limit out at once or not
+
+
+note will need player to set current position to be a 0 so other players cant enter there. also bombs whihc will reset to 2 on explosion

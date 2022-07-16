@@ -16,7 +16,7 @@ const assetList = ["img/tilemap_packed.png",
 ]
 
 const img = new Image();
-img.setAttribute("src", "../img/map/Rural Village Water48.png");
+img.setAttribute("src", "../img/bomb_party_v4.png");
 
 const playImg = new Image();
 playImg.setAttribute("src", "../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
@@ -25,21 +25,21 @@ playImg.setAttribute("src", "../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
 ////MAPS
 
 var map = {
-  cols: 8,
+  cols: 11,
   rows: 8,
-  tSize: 48,
-  mSize: 2,//size increase as a multiple
-  atlasCol: 24,
-  atlasRow: 24, 
+  tSize: 16,
+  mSize: 4,//size increase as a multiple
+  atlasCol: 15,
+  atlasRow: 7, 
   tiles: [
-    0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 1, 2, 2, 2, 2, 3, 0,
-    0, 25, 26, 26, 26, 26, 27, 0,
-    0, 25, 4, 5, 26, 26, 27, 0,
-    0, 25, 28, 29, 26, 26, 27, 0,
-    0, 25, 26, 26, 26, 26, 27, 0,
-    0, 59, 60, 60, 60, 60, 61, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
+    0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
+    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+    0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
+    0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
+    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+    0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0
   ],
   drawMap: () =>{
     let mapIndex = 0;
@@ -77,25 +77,25 @@ var map = {
 };
 
 const player = {
-  cols: 8,
+  cols: 11,
   rows: 8,
   tSize: 16,
-  mSize: 6,//size increase as a multiple
+  mSize: 4,//size increase as a multiple
   atlasCol: 8,
   atlasRow: 1, 
   tiles: [
-    0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 1, 2, 2, 2, 0, 0,
-    0, 0, 2, 2, 2, 2, 0, 0,
-    0, 0, 0, 0, 2, 2, 0, 0,
-    0, 0, 0, 0, 2, 2, 0, 0,
-    0, 0, 2, 2, 2, 2, 0, 0,
-    0, 0, 2, 2, 2, 2, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
   ],
-  playIndex: 11,
+  playIndex: 24,
   playCol: 2,
-  playRow: 1,
+  playRow: 2,
 
 
   drawPlayer: () =>{
@@ -149,50 +149,72 @@ const player = {
 
             playerRight: () =>{
                 if (player.tiles[player.playIndex +1] === 2){
-                    player.tiles[player.playIndex] = 2;
-                    player.tiles[player.playIndex +1] = 1;
-                    player.playIndex++
-                    player.playCol++
+                    //player.tiles[player.playIndex] = 2;
+                    //player.tiles[player.playIndex +1] = 1;
+                    player.playIndex++;
+                    player.playCol++;
                     console.log(player.playIndex);
                     playCtx.clearRect(0, 0, canvas.width, canvas.height);
                     player.drawPlayer();
-                },
+                }},
 
-                playerRight: () =>{
-                  if (player.tiles[player.playIndex +1] === 2){
-                      player.tiles[player.playIndex] = 2;
-                      player.tiles[player.playIndex +1] = 1;
-                      player.playIndex++
-                      player.playCol++
+                playerLeft: () =>{
+                  if (player.tiles[player.playIndex -1] === 2){
+                      //player.tiles[player.playIndex] = 2;
+                      //player.tiles[player.playIndex -1] = 1;
+                      player.playIndex--;
+                      player.playCol--;
                       console.log(player.playIndex);
                       playCtx.clearRect(0, 0, canvas.width, canvas.height);
                       player.drawPlayer();
-                  },
+                  }},
 
-                  playerRight: () =>{
-                    if (player.tiles[player.playIndex +1] === 2){
+                  playerUp: () =>{
+                    if (player.tiles[player.playIndex - player.cols] === 2){
                         player.tiles[player.playIndex] = 2;
-                        player.tiles[player.playIndex +1] = 1;
-                        player.playIndex++
-                        player.playCol++
+                        //player.tiles[player.playIndex - player.cols] = 1;
+                        player.playIndex =player.playIndex - player.cols;
+                        player.playRow--;
                         console.log(player.playIndex);
                         playCtx.clearRect(0, 0, canvas.width, canvas.height);
                         player.drawPlayer();
-                    },
-                    
-                    .playerRight: () =>{
-                      if (player.tiles[player.playIndex +1] === 2){
+                    }},
+
+                    playerDown: () =>{
+                      if (player.tiles[player.playIndex + player.cols] === 2){
                           player.tiles[player.playIndex] = 2;
-                          player.tiles[player.playIndex +1] = 1;
-                          player.playIndex++
-                          player.playCol++
+                          //player.tiles[player.playIndex +player.cols] = 1;
+                          player.playIndex = player.playIndex + player.cols;
+                          player.playRow++
                           console.log(player.playIndex);
                           playCtx.clearRect(0, 0, canvas.width, canvas.height);
                           player.drawPlayer();
                       }
 
 
-            }
+            },
+
+    bomb: () =>{
+        console.log("boom");
+    },       
+
+    movePlayer( {keyCode}){
+          if (keyCode === 37){
+            //left
+            player.playerLeft();
+          }else if (keyCode === 39  ){
+            //right
+            player.playerRight();
+          }else if ( keyCode === 38 ){
+            //up
+            player.playerUp();
+          }else if ( keyCode === 40){
+            //down
+            player.playerDown();
+          }else if( keyCode === 16 ){
+            player.bomb();
+          }
+    }        
 }
 /////////////////
 //////FUNCTIONS
@@ -282,7 +304,34 @@ const preLoad = (assets) =>{
  map.drawMap();
  player.drawPlayer();
 
- setTimeout(()=>{
-  console.log("move right");
-  player.playerRight()
-}, 5000)
+//  setTimeout(()=>{
+//   console.log("move right");
+//   player.playerRight()
+// }, 3000)
+
+// setTimeout(()=>{
+//   console.log("move left");
+//   player.playerLeft()
+// }, 5000)
+
+// setTimeout(()=>{
+//   console.log("move up");
+//   player.playerUp()
+// }, 3000)
+
+// setTimeout(()=>{
+//   console.log("move down");
+//   player.playerDown();
+//   console.log([player.tiles]);
+// }, 4000)
+
+
+
+
+// window.addEventListener("keydown", event => {
+//   if (event.key == "v") {
+//     player.playerUp;
+//   }
+// });
+
+document.addEventListener("keydown", player.movePlayer);
