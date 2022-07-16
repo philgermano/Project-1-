@@ -5,12 +5,21 @@ let imgLoaded = false;
 const canvas = document.querySelector("#myCanvas");
 const context = canvas.getContext("2d");
 
+const playLayer = document.querySelector("#playerLayer");
+const playCtx = playLayer.getContext("2d");
+
 //list of image assets. will be preloaded in preLoad function
 const assetList = ["img/tilemap_packed.png",
       "img/SORCERER/ENEMIES8bit_Sorcerer Idle U.png",
       "img/SORCERER/ENEMIES8bit_Sorcerer Hurt D.png",
       "img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png"
 ]
+
+const img = new Image();
+img.setAttribute("src", "../img/map/Rural Village Water48.png");
+
+const playImg = new Image();
+playImg.setAttribute("src", "../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
 
 ///////////////
 ////MAPS
@@ -32,12 +41,159 @@ var map = {
     0, 59, 60, 60, 60, 60, 61, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 
   ],
-  getTile: function(col, row) {
-    return this.tiles[row * map.cols + col]
-  }
+  drawMap: () =>{
+    let mapIndex = 0;
+    let sourceX = 0;
+    let sourceY = 0;
+    let mapHeight = map.rows * map.tSize;
+    let mapWidth = map.cols * map.tSize;
+    tileMap = img;
+
+    for (let c = 0; c < mapHeight; c+= map.tSize) {
+      console.log("c", c);
+          for (let r = 0; r < mapWidth; r += map.tSize) {
+            console.log("r", r);
+            let tile = map.tiles[mapIndex];
+            if (tile !== 0) { // 0 => empty tile
+              tile -= 1;
+              sourceX =  Math.floor(tile % map.atlasCol) * map.tSize; //if over tilemap width its takes remainder and measures from 0
+              sourceY =  Math.floor(tile / map.atlasCol) * map.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
+              context.drawImage(
+                tileMap, // image source
+                sourceX, // x on tilemap to cut from
+                sourceY, // y on tilemap to cut from
+                map.tSize, // source tile width
+                map.tSize, // source tile height
+                r * map.mSize, // target x on canvas
+                c * map.mSize, // target y on canvas
+                map.mSize * map.tSize , // target width on canvas
+                map.mSize * map.tSize // target height on canvas
+              )
+            }
+            mapIndex++;
+          }
+        } 
+ }
 };
 
+const player = {
+  cols: 8,
+  rows: 8,
+  tSize: 16,
+  mSize: 6,//size increase as a multiple
+  atlasCol: 8,
+  atlasRow: 1, 
+  tiles: [
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 1, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 0, 0,
+    0, 0, 0, 0, 2, 2, 0, 0,
+    0, 0, 0, 0, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 
+  ],
+  playIndex: 11,
+  playCol: 2,
+  playRow: 1,
 
+
+  drawPlayer: () =>{
+
+    playCtx.drawImage(
+                  playImg, // image source
+                  0, // x on tilemap to cut from
+                  0, // y on tilemap to cut from
+                  player.tSize, // source tile width
+                  player.tSize, // source tile height
+                  player.playCol * (player.mSize * player.tSize), // target x on canvas
+                  player.playRow * (player.mSize * player.tSize), // target y on canvas
+                  player.mSize * player.tSize , // target width on canvas
+                  player.mSize * player.tSize // target height on canvas
+                )
+
+
+    // let mapIndex = 0;
+    // let sourceX = 0;
+    // let sourceY = 0;
+    // let mapHeight = player.rows * player.tSize;
+    // let mapWidth = player.cols * player.tSize;
+    // tileMap = playImg;
+
+
+    // for (let c = 0; c < mapHeight; c+= player.tSize) {
+    //   console.log("c", c);
+    //       for (let r = 0; r < mapWidth; r += player.tSize) {
+    //         console.log("r", r);
+    //         let tile = player.tiles[mapIndex];
+    //         if (tile !== 0 && tile !== 2) { // 0 => empty tile
+    //           tile -= 1;
+    //           sourceX =  Math.floor(tile % player.atlasCol) * player.tSize; //if over tilemap width its takes remainder and measures from 0
+    //           sourceY =  Math.floor(tile / player.atlasCol) * player.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
+    //           playctx.drawImage(
+    //             tileMap, // image source
+    //             sourceX, // x on tilemap to cut from
+    //             sourceY, // y on tilemap to cut from
+    //             player.tSize, // source tile width
+    //             player.tSize, // source tile height
+    //             r * player.mSize, // target x on canvas
+    //             c * player.mSize, // target y on canvas
+    //             player.mSize * player.tSize , // target width on canvas
+    //             player.mSize * player.tSize // target height on canvas
+    //           )
+    //         }
+    //         mapIndex++;
+    //       }
+      //  } 
+          },
+
+            playerRight: () =>{
+                if (player.tiles[player.playIndex +1] === 2){
+                    player.tiles[player.playIndex] = 2;
+                    player.tiles[player.playIndex +1] = 1;
+                    player.playIndex++
+                    player.playCol++
+                    console.log(player.playIndex);
+                    playCtx.clearRect(0, 0, canvas.width, canvas.height);
+                    player.drawPlayer();
+                },
+
+                playerRight: () =>{
+                  if (player.tiles[player.playIndex +1] === 2){
+                      player.tiles[player.playIndex] = 2;
+                      player.tiles[player.playIndex +1] = 1;
+                      player.playIndex++
+                      player.playCol++
+                      console.log(player.playIndex);
+                      playCtx.clearRect(0, 0, canvas.width, canvas.height);
+                      player.drawPlayer();
+                  },
+
+                  playerRight: () =>{
+                    if (player.tiles[player.playIndex +1] === 2){
+                        player.tiles[player.playIndex] = 2;
+                        player.tiles[player.playIndex +1] = 1;
+                        player.playIndex++
+                        player.playCol++
+                        console.log(player.playIndex);
+                        playCtx.clearRect(0, 0, canvas.width, canvas.height);
+                        player.drawPlayer();
+                    },
+                    
+                    .playerRight: () =>{
+                      if (player.tiles[player.playIndex +1] === 2){
+                          player.tiles[player.playIndex] = 2;
+                          player.tiles[player.playIndex +1] = 1;
+                          player.playIndex++
+                          player.playCol++
+                          console.log(player.playIndex);
+                          playCtx.clearRect(0, 0, canvas.width, canvas.height);
+                          player.drawPlayer();
+                      }
+
+
+            }
+}
 /////////////////
 //////FUNCTIONS
 /////////////////
@@ -74,11 +230,7 @@ const preLoad = (assets) =>{
 // context.textAlign = "center";
 // context.fillText("Hello World", canvas.width/2, canvas.height/2);
 
-       
-  // preLoad(assetList);
-
-  const img = new Image();
-  img.setAttribute("src", "../img/map/Rural Village Water48.png");
+ 
   // context.drawImage(
   //     img,
   //     64,0, //tilsheet x abd y
@@ -91,38 +243,46 @@ const preLoad = (assets) =>{
 //   //tX ,tY = tilemap x & y for tile... mX, mY = canvas x & y for placement
 // }
 
-let mapIndex = 0;
-let sourceX = 0;
-let sourceY = 0;
-let mapHeight = map.rows * map.tSize;
-let mapWidth = map.cols * map.tSize;
-tileMap = img;
+// let mapIndex = 0;
+// let sourceX = 0;
+// let sourceY = 0;
+// let mapHeight = map.rows * map.tSize;
+// let mapWidth = map.cols * map.tSize;
+// tileMap = img;
 
- const drawMap =() =>{
-    for (let c = 0; c < mapHeight; c+= map.tSize) {
-      console.log("c", c);
-          for (let r = 0; r < mapWidth; r += map.tSize) {
-            console.log("r", r);
-            let tile = map.tiles[mapIndex];
-            if (tile !== 0) { // 0 => empty tile
-              tile -= 1;
-              sourceX =  Math.floor(tile % map.atlasCol) * map.tSize; //if over tilemap width its takes remainder and measures from 0
-              sourceY =  Math.floor(tile / map.atlasCol) * map.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
-              context.drawImage(
-                tileMap, // image source
-                sourceX, // x on tilemap to cut from
-                sourceY, // y on tilemap to cut from
-                map.tSize, // source tile width
-                map.tSize, // source tile height
-                r * map.mSize, // target x on canvas
-                c * map.mSize, // target y on canvas
-                map.mSize * map.tSize , // target width on canvas
-                map.mSize * map.tSize // target height on canvas
-              )
-            }
-            mapIndex++;
-          }
-        } 
- }
+//  const drawMap =() =>{
+//     for (let c = 0; c < mapHeight; c+= map.tSize) {
+//       console.log("c", c);
+//           for (let r = 0; r < mapWidth; r += map.tSize) {
+//             console.log("r", r);
+//             let tile = map.tiles[mapIndex];
+//             if (tile !== 0) { // 0 => empty tile
+//               tile -= 1;
+//               sourceX =  Math.floor(tile % map.atlasCol) * map.tSize; //if over tilemap width its takes remainder and measures from 0
+//               sourceY =  Math.floor(tile / map.atlasCol) * map.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
+//               context.drawImage(
+//                 tileMap, // image source
+//                 sourceX, // x on tilemap to cut from
+//                 sourceY, // y on tilemap to cut from
+//                 map.tSize, // source tile width
+//                 map.tSize, // source tile height
+//                 r * map.mSize, // target x on canvas
+//                 c * map.mSize, // target y on canvas
+//                 map.mSize * map.tSize , // target width on canvas
+//                 map.mSize * map.tSize // target height on canvas
+//               )
+//             }
+//             mapIndex++;
+//           }
+//         } 
+//  }
  
- drawMap();
+ //drawMap();
+
+ map.drawMap();
+ player.drawPlayer();
+
+ setTimeout(()=>{
+  console.log("move right");
+  player.playerRight()
+}, 5000)
