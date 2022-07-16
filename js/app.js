@@ -5,15 +5,17 @@ let imgLoaded = false;
 const canvas = document.querySelector("#myCanvas");
 const context = canvas.getContext("2d");
 
-const playLayer = document.querySelector("#playerLayer");
-const playCtx = playLayer.getContext("2d");
+const playerLayer = document.querySelector("#playerLayer");
+const playCtx = playerLayer.getContext("2d");
+
+
 
 //list of image assets. will be preloaded in preLoad function
-const assetList = ["img/tilemap_packed.png",
-      "img/SORCERER/ENEMIES8bit_Sorcerer Idle U.png",
-      "img/SORCERER/ENEMIES8bit_Sorcerer Hurt D.png",
-      "img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png"
-]
+// const assetList = ["img/tilemap_packed.png",
+//       "img/SORCERER/ENEMIES8bit_Sorcerer Idle U.png",
+//       "img/SORCERER/ENEMIES8bit_Sorcerer Hurt D.png",
+//       "img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png"
+// ]
 
 const img = new Image();
 img.setAttribute("src", "../img/bomb_party_v4.png");
@@ -86,7 +88,7 @@ const player = {
   tiles: [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 1, 2, 2, 2, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
@@ -96,6 +98,12 @@ const player = {
   playIndex: 24,
   playCol: 2,
   playRow: 2,
+
+  pMarkCur: () =>{
+    if(player.tiles[player.playIndex] === 1){
+      player.tiles[player.playIndex] = 2;
+};
+  },
 
 
   drawPlayer: () =>{
@@ -112,91 +120,55 @@ const player = {
                   player.mSize * player.tSize // target height on canvas
                 )
 
-
-    // let mapIndex = 0;
-    // let sourceX = 0;
-    // let sourceY = 0;
-    // let mapHeight = player.rows * player.tSize;
-    // let mapWidth = player.cols * player.tSize;
-    // tileMap = playImg;
-
-
-    // for (let c = 0; c < mapHeight; c+= player.tSize) {
-    //   console.log("c", c);
-    //       for (let r = 0; r < mapWidth; r += player.tSize) {
-    //         console.log("r", r);
-    //         let tile = player.tiles[mapIndex];
-    //         if (tile !== 0 && tile !== 2) { // 0 => empty tile
-    //           tile -= 1;
-    //           sourceX =  Math.floor(tile % player.atlasCol) * player.tSize; //if over tilemap width its takes remainder and measures from 0
-    //           sourceY =  Math.floor(tile / player.atlasCol) * player.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
-    //           playctx.drawImage(
-    //             tileMap, // image source
-    //             sourceX, // x on tilemap to cut from
-    //             sourceY, // y on tilemap to cut from
-    //             player.tSize, // source tile width
-    //             player.tSize, // source tile height
-    //             r * player.mSize, // target x on canvas
-    //             c * player.mSize, // target y on canvas
-    //             player.mSize * player.tSize , // target width on canvas
-    //             player.mSize * player.tSize // target height on canvas
-    //           )
-    //         }
-    //         mapIndex++;
-    //       }
-      //  } 
           },
 
             playerRight: () =>{
                 if (player.tiles[player.playIndex +1] === 2){
-                    //player.tiles[player.playIndex] = 2;
-                    //player.tiles[player.playIndex +1] = 1;
+                    player.pMarkCur();
+                    player.tiles[player.playIndex +1] = 1;
                     player.playIndex++;
                     player.playCol++;
                     console.log(player.playIndex);
-                    playCtx.clearRect(0, 0, canvas.width, canvas.height);
-                    player.drawPlayer();
+                    // playCtx.clearRect(0, 0, canvas.width, canvas.height);
+                    // player.drawPlayer();
+                    console.log(player.tiles);
                 }},
 
                 playerLeft: () =>{
                   if (player.tiles[player.playIndex -1] === 2){
-                      //player.tiles[player.playIndex] = 2;
-                      //player.tiles[player.playIndex -1] = 1;
+                      player.pMarkCur();
+                      player.tiles[player.playIndex -1] = 1;
                       player.playIndex--;
                       player.playCol--;
                       console.log(player.playIndex);
-                      playCtx.clearRect(0, 0, canvas.width, canvas.height);
-                      player.drawPlayer();
+                      // playCtx.clearRect(0, 0, canvas.width, canvas.height);
+                      // player.drawPlayer();
                   }},
 
                   playerUp: () =>{
                     if (player.tiles[player.playIndex - player.cols] === 2){
-                        player.tiles[player.playIndex] = 2;
-                        //player.tiles[player.playIndex - player.cols] = 1;
+                        player.pMarkCur();
+                        player.tiles[player.playIndex - player.cols] = 1;
                         player.playIndex =player.playIndex - player.cols;
                         player.playRow--;
                         console.log(player.playIndex);
-                        playCtx.clearRect(0, 0, canvas.width, canvas.height);
-                        player.drawPlayer();
+                        // playCtx.clearRect(0, 0, canvas.width, canvas.height);
+                        // player.drawPlayer();
                     }},
 
                     playerDown: () =>{
                       if (player.tiles[player.playIndex + player.cols] === 2){
-                          player.tiles[player.playIndex] = 2;
-                          //player.tiles[player.playIndex +player.cols] = 1;
+                          player.pMarkCur();
+                          player.tiles[player.playIndex +player.cols] = 1;
                           player.playIndex = player.playIndex + player.cols;
                           player.playRow++
                           console.log(player.playIndex);
-                          playCtx.clearRect(0, 0, canvas.width, canvas.height);
-                          player.drawPlayer();
+                          // playCtx.clearRect(0, 0, canvas.width, canvas.height);
+                          // player.drawPlayer();
                       }
 
 
             },
-
-    bomb: () =>{
-        console.log("boom");
-    },       
 
     movePlayer( {keyCode}){
           if (keyCode === 37){
@@ -214,7 +186,50 @@ const player = {
           }else if( keyCode === 16 ){
             player.bomb();
           }
-    }        
+    
+    
+    
+        }
+}
+
+
+
+class bomb {
+  constructor(row, col){
+      this.row = row;
+      this.col = col;
+      this.stage = 1;
+      this.sprCol = 5;
+      this.sprRow = 7;
+
+      this.fuse = ()=>{
+        this.stage++
+
+        if(stage === 6){
+          this.boom();
+        }
+      };
+      
+      this.boom = () =>{
+        //bomb exploding stuff. 
+        //probably removing itself and creating and instance of the explosion type.
+      };
+
+      this.placeBomb = ()=>{
+        bombCtx.drawImage(
+                      tileMap, // image source
+                      sourceX, // x on tilemap to cut from
+                      sourceY, // y on tilemap to cut from
+                      map.tSize, // source tile width
+                      map.tSize, // source tile height
+                      this.row * map.mSize, // target x on canvas
+                      this.col * map.mSize, // target y on canvas
+                      map.mSize * map.tSize , // target width on canvas
+                      map.mSize * map.tSize // target height on canvas
+        )}
+
+
+  }
 }
 /////////////////
 //////FUNCTIONS
@@ -231,79 +246,19 @@ const preLoad = (assets) =>{
   }
     imgLoaded = true;
 }   
-// context.fillStyle = "tan";
-// context.fillRect(0, 0, 256, 265);
-
-// let grid = context.createLinearGradient(0,0,200,50);
-// grid.addColorStop(0, "red");
-// grid.addColorStop(1,"white");
-// context.fillStyle = grid;
-// context.fillRect(10,10,236,236);
 
 
-// context.lineWidth = 4;
-// context.moveTo(0,0);
-// context.lineTo(256,256);
-// context.strokeStyle = "black"
-// context.stroke();
-
-// context.font = "30px Comic Sans MS";
-// context.fillStyle = "black";
-// context.textAlign = "center";
-// context.fillText("Hello World", canvas.width/2, canvas.height/2);
-
- 
-  // context.drawImage(
-  //     img,
-  //     64,0, //tilsheet x abd y
-  //     16,16, //how big to grab
-  //     10,10, //where to place 
-  //     50,50 //size of tile when placed
-  //     )    
-      
-// const drawMap = (tX, tY, mX, mY) =>{
-//   //tX ,tY = tilemap x & y for tile... mX, mY = canvas x & y for placement
-// }
-
-// let mapIndex = 0;
-// let sourceX = 0;
-// let sourceY = 0;
-// let mapHeight = map.rows * map.tSize;
-// let mapWidth = map.cols * map.tSize;
-// tileMap = img;
-
-//  const drawMap =() =>{
-//     for (let c = 0; c < mapHeight; c+= map.tSize) {
-//       console.log("c", c);
-//           for (let r = 0; r < mapWidth; r += map.tSize) {
-//             console.log("r", r);
-//             let tile = map.tiles[mapIndex];
-//             if (tile !== 0) { // 0 => empty tile
-//               tile -= 1;
-//               sourceX =  Math.floor(tile % map.atlasCol) * map.tSize; //if over tilemap width its takes remainder and measures from 0
-//               sourceY =  Math.floor(tile / map.atlasCol) * map.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
-//               context.drawImage(
-//                 tileMap, // image source
-//                 sourceX, // x on tilemap to cut from
-//                 sourceY, // y on tilemap to cut from
-//                 map.tSize, // source tile width
-//                 map.tSize, // source tile height
-//                 r * map.mSize, // target x on canvas
-//                 c * map.mSize, // target y on canvas
-//                 map.mSize * map.tSize , // target width on canvas
-//                 map.mSize * map.tSize // target height on canvas
-//               )
-//             }
-//             mapIndex++;
-//           }
-//         } 
-//  }
- 
- //drawMap();
 
  map.drawMap();
  player.drawPlayer();
 
+ const tick = setInterval(()=>{
+  playCtx.clearRect(0, 0, canvas.width, canvas.height);
+  player.drawPlayer();
+ },100)
+
+
+ //time based movement testers
 //  setTimeout(()=>{
 //   console.log("move right");
 //   player.playerRight()
@@ -335,3 +290,120 @@ const preLoad = (assets) =>{
 // });
 
 document.addEventListener("keydown", player.movePlayer);
+
+
+
+////DEAD CODE GRAVEYARD. DIDN'T WORK BUT FIGURED ID HOLD OFF ON DELETING FOR NOW.
+//#region 
+// const bombTimer = (x,y,stage) =>{
+//   setTimeout(( x, y, stage)=>{
+//     bombCtx.clearRect(0, 0, canvas.width, canvas.height);
+//     let bombX= x;
+//     let bombY = y;
+//     stage;
+//     bombCtx.drawImage(
+//       img, // image source
+//       (bomb.bombCol + stage) * 16, // x on tilemap to cut from
+//       (bomb.bombRow + stage) * 16, // y on tilemap to cut from
+//       bomb.tSize, // source tile width
+//       bomb.tSize, // source tile height
+//       bombX, // target x on canvas
+//       bombY, // target y on canvas
+//       bomb.mSize * bomb.tSize , // target width on canvas
+//       bomb.mSize * bomb.tSize // target height on canvas
+//         )
+
+//   stage ++;
+//   console.log(stage, bombX, bombY);
+
+//     bombTimer(bombX,bombY, stage)}
+//   ,500)
+// }
+
+    // console.log("boom");
+    // //bomb 1 is index 71. col 5, row 7
+    //     bombCtx.drawImage(
+    //           img, // image source
+    //           bomb.bombCol * 16, // x on tilemap to cut from
+    //           bomb.bombRow * 16, // y on tilemap to cut from
+    //           bomb.tSize, // source tile width
+    //           bomb.tSize, // source tile height
+    //           player.playCol * (player.mSize * player.tSize), // target x on canvas
+    //           player.playRow * (player.mSize * player.tSize), // target y on canvas
+    //           bomb.mSize * bomb.tSize , // target width on canvas
+    //           bomb.mSize * bomb.tSize // target height on canvas
+    //     );
+    //     bombTimer(player.playCol * (player.mSize * player.tSize),player.playRow * (player.mSize * player.tSize) ,1);      
+//},  
+
+   // let mapIndex = 0;
+    // let sourceX = 0;
+    // let sourceY = 0;
+    // let mapHeight = player.rows * player.tSize;
+    // let mapWidth = player.cols * player.tSize;
+    // tileMap = playImg;
+
+
+    // for (let c = 0; c < mapHeight; c+= player.tSize) {
+    //   console.log("c", c);
+    //       for (let r = 0; r < mapWidth; r += player.tSize) {
+    //         console.log("r", r);
+    //         let tile = player.tiles[mapIndex];
+    //         if (tile !== 0 && tile !== 2) { // 0 => empty tile
+    //           tile -= 1;
+    //           sourceX =  Math.floor(tile % player.atlasCol) * player.tSize; //if over tilemap width its takes remainder and measures from 0
+    //           sourceY =  Math.floor(tile / player.atlasCol) * player.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
+    //           playctx.drawImage(
+    //             tileMap, // image source
+    //             sourceX, // x on tilemap to cut from
+    //             sourceY, // y on tilemap to cut from
+    //             player.tSize, // source tile width
+    //             player.tSize, // source tile height
+    //             r * player.mSize, // target x on canvas
+    //             c * player.mSize, // target y on canvas
+    //             player.mSize * player.tSize , // target width on canvas
+    //             player.mSize * player.tSize // target height on canvas
+    //           )
+    //         }
+    //         mapIndex++;
+    //       }
+      //  } 
+  //     let mapIndex = 0;
+  //     let sourceX = 0;
+  //     let sourceY = 0;
+  //     let mapHeight = map.rows * map.tSize;
+  //     let mapWidth = map.cols * map.tSize;
+  //     tileMap = img;
+  
+  //     for (let c = 0; c < mapHeight; c+= map.tSize) {
+  //       console.log("c", c);
+  //           for (let r = 0; r < mapWidth; r += map.tSize) {
+  //             console.log("r", r);
+  //             let tile = bomb.tiles[mapIndex];
+  //             if (tile !== 0) { // 0 => empty tile
+  //               tile -= 1;
+  //               sourceX =  Math.floor(tile % map.atlasCol) * map.tSize; //if over tilemap width its takes remainder and measures from 0
+  //               bombCtx.drawImage(
+  //                 tileMap, // image source
+  //                 sourceX, // x on tilemap to cut from
+  //                 sourceY, // y on tilemap to cut from
+  //                 map.tSize, // source tile width
+  //                 map.tSize, // source tile height
+  //                 r * map.mSize, // target x on canvas
+  //                 c * map.mSize, // target y on canvas
+  //                 map.mSize * map.tSize , // target width on canvas
+  //                 map.mSize * map.tSize // target height on canvas
+  //               )
+  //             }
+  //             mapIndex++;
+  //           }
+  //         } 
+  //  }
+
+  //  bomb: ()=>{
+  //   if(player.tiles[player.playIndex] === 1){
+  //     player.tiles[player.playIndex] = 95;
+  //     bomb.tiles[player.playIndex] = 95;
+  //     bomb.placeBomb();
+      
+//#endregion

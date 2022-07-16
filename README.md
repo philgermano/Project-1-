@@ -57,9 +57,8 @@ game sprite sheet 16x16 7 high 15 wide
 
 TO DO when back.
 
-set bomb to be drawn. can be on player layer or maybe a bomb canvas  
+note will need player to set current position to be a 0 so other players cant enter there. also bombs whihc will reset to 2 on explosion.
 
-will need to figure out if player should have a bomb limit out at once or not
+drawing is done by one function. logic by another.
 
-
-note will need player to set current position to be a 0 so other players cant enter there. also bombs whihc will reset to 2 on explosion
+bomb is a class player makes a new instance of that class. so each bomb can count it stuff like x,y and timers.
