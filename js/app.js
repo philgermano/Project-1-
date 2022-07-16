@@ -16,17 +16,21 @@ const assetList = ["img/tilemap_packed.png",
 ////MAPS
 
 var map = {
-  cols: 4,
-  rows: 4,
-  tSize: 16,
-  mSize: 4,//size increase as a multiple
-  atlasCol: 12,
-  atlasRow: 11, 
+  cols: 8,
+  rows: 8,
+  tSize: 48,
+  mSize: 2,//size increase as a multiple
+  atlasCol: 24,
+  atlasRow: 24, 
   tiles: [
-    2, 3, 3, 4,
-    14, 31, 31, 16, 
-    14, 43, 43, 16, 
-    26, 27, 27, 28, 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 1, 2, 2, 2, 2, 3, 0,
+    0, 25, 26, 26, 26, 26, 27, 0,
+    0, 25, 4, 5, 26, 26, 27, 0,
+    0, 25, 28, 29, 26, 26, 27, 0,
+    0, 25, 26, 26, 26, 26, 27, 0,
+    0, 59, 60, 60, 60, 60, 61, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 
   ],
   getTile: function(col, row) {
     return this.tiles[row * map.cols + col]
@@ -70,13 +74,11 @@ const preLoad = (assets) =>{
 // context.textAlign = "center";
 // context.fillText("Hello World", canvas.width/2, canvas.height/2);
 
-
-
-        
+       
   // preLoad(assetList);
 
   const img = new Image();
-  img.setAttribute("src", "../img/tilemap_packed.png");
+  img.setAttribute("src", "../img/map/Rural Village Water48.png");
   // context.drawImage(
   //     img,
   //     64,0, //tilsheet x abd y
@@ -117,8 +119,8 @@ tileMap = img;
                 map.mSize * map.tSize , // target width on canvas
                 map.mSize * map.tSize // target height on canvas
               )
-              mapIndex++;
             }
+            mapIndex++;
           }
         } 
  }

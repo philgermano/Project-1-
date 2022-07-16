@@ -37,4 +37,8 @@ drawing images onto canvas needs delay so images load before drawing. won't work
 
 
 for movment initial
-if map is 6 by 6 just add 6 to current positon and check if is open tile. if so turn current location to open tile and turn new tile to player tile
+2nd canvas over top of the first. player sprite on that. map canvas stays untouched currently
+
+
+
+accomplished
