@@ -23,6 +23,51 @@ img.setAttribute("src", "../img/bomb_party_v4.png");
 const playImg = new Image();
 playImg.setAttribute("src", "../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
 
+const explosives =[];
+///////////////
+////classes
+class bomb {
+  constructor(row, col, bombMapIndex){
+      this.row = row;
+      this.col = col;
+      this.bombMapIndex = bombMapIndex;
+      this.stage = 1;
+      this.sprCol = 5;
+      this.sprRow = 7;
+
+      this.fuse = ()=>{
+        this.stage++
+
+        if(stage === 6){
+          this.boom();
+        }
+      };
+      
+      this.boom = () =>{
+        //bomb exploding stuff. 
+        //probably removing itself and creating and instance of the explosion type.
+      };
+
+      this.drawBomb = ()=>{
+        let sourceX =  (this.sprCol -1) * 16;
+        let sourceY = (this.sprRow -1) * 16;
+          // console.log("SX", sourceX);
+          // console.log("SY",sourceY);
+        playCtx.drawImage(
+                      img, // image source
+                      sourceX, // x on tilemap to cut from
+                      sourceY, // y on tilemap to cut from
+                      map.tSize, // source tile width
+                      map.tSize, // source tile height
+                      this.col * (map.mSize * map.tSize), // target x on canvas
+                      this.row * (map.mSize * map.tSize), // target y on canvas
+                      map.mSize * map.tSize , // target width on canvas
+                      map.mSize * map.tSize // target height on canvas
+        )}
+  }
+}
+
+
 ///////////////
 ////MAPS
 
@@ -170,7 +215,7 @@ const player = {
 
             },
 
-    movePlayer( {keyCode}){
+            movePlayer( {keyCode}){
           if (keyCode === 37){
             //left
             player.playerLeft();
@@ -184,53 +229,21 @@ const player = {
             //down
             player.playerDown();
           }else if( keyCode === 16 ){
-            player.bomb();
+            if( player.tiles[player.playIndex] !== 3){
+            const bomblet = new bomb(player.playRow,player.playCol, player.playIndex);
+            player.tiles[player.playIndex] = 3;
+            explosives.push(bomblet);
+            console.log(bomblet);
+            console.log(explosives);
           }
-    
-    
-    
-        }
+
+          } 
+            },
+            
 }
 
 
 
-class bomb {
-  constructor(row, col){
-      this.row = row;
-      this.col = col;
-      this.stage = 1;
-      this.sprCol = 5;
-      this.sprRow = 7;
-
-      this.fuse = ()=>{
-        this.stage++
-
-        if(stage === 6){
-          this.boom();
-        }
-      };
-      
-      this.boom = () =>{
-        //bomb exploding stuff. 
-        //probably removing itself and creating and instance of the explosion type.
-      };
-
-      this.placeBomb = ()=>{
-        bombCtx.drawImage(
-                      tileMap, // image source
-                      sourceX, // x on tilemap to cut from
-                      sourceY, // y on tilemap to cut from
-                      map.tSize, // source tile width
-                      map.tSize, // source tile height
-                      this.row * map.mSize, // target x on canvas
-                      this.col * map.mSize, // target y on canvas
-                      map.mSize * map.tSize , // target width on canvas
-                      map.mSize * map.tSize // target height on canvas
-        )}
-
-
-  }
-}
 /////////////////
 //////FUNCTIONS
 /////////////////
@@ -248,6 +261,16 @@ const preLoad = (assets) =>{
 }   
 
 
+const drawBombs = ()=>{
+ // console.log("drawbobs");
+    
+    explosives.forEach((iED) =>{
+      iED.drawBomb();
+      // console.log(iED);
+    } ) 
+    
+}
+
 
  map.drawMap();
  player.drawPlayer();
@@ -255,39 +278,11 @@ const preLoad = (assets) =>{
  const tick = setInterval(()=>{
   playCtx.clearRect(0, 0, canvas.width, canvas.height);
   player.drawPlayer();
+  drawBombs();
  },100)
 
 
- //time based movement testers
-//  setTimeout(()=>{
-//   console.log("move right");
-//   player.playerRight()
-// }, 3000)
 
-// setTimeout(()=>{
-//   console.log("move left");
-//   player.playerLeft()
-// }, 5000)
-
-// setTimeout(()=>{
-//   console.log("move up");
-//   player.playerUp()
-// }, 3000)
-
-// setTimeout(()=>{
-//   console.log("move down");
-//   player.playerDown();
-//   console.log([player.tiles]);
-// }, 4000)
-
-
-
-
-// window.addEventListener("keydown", event => {
-//   if (event.key == "v") {
-//     player.playerUp;
-//   }
-// });
 
 document.addEventListener("keydown", player.movePlayer);
 
@@ -405,5 +400,34 @@ document.addEventListener("keydown", player.movePlayer);
   //     player.tiles[player.playIndex] = 95;
   //     bomb.tiles[player.playIndex] = 95;
   //     bomb.placeBomb();
-      
+  
+   //time based movement testers
+//  setTimeout(()=>{
+//   console.log("move right");
+//   player.playerRight()
+// }, 3000)
+
+// setTimeout(()=>{
+//   console.log("move left");
+//   player.playerLeft()
+// }, 5000)
+
+// setTimeout(()=>{
+//   console.log("move up");
+//   player.playerUp()
+// }, 3000)
+
+// setTimeout(()=>{
+//   console.log("move down");
+//   player.playerDown();
+//   console.log([player.tiles]);
+// }, 4000)
+
+
+// window.addEventListener("keydown", event => {
+//   if (event.key == "v") {
+//     player.playerUp;
+//   }
+// });
+
 //#endregion
