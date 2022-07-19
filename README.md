@@ -61,9 +61,11 @@ note will need player to set current position to be a 0 so other players cant en
 
 drawing is done by one function. logic by another.
 
-bomb is a class player makes a new instance of that class. so each bomb can count it stuff like x,y and timers.
+bomb is a class player makes a new instance of that class. so each bomb can count it stuff like x,y and timers.DONE
 
-bombs get placed to array. then loop through the array 
+bombs get placed to array. then loop through the array. DONE
 
 
-OKAY bombs draw now. need to put in update to map so it can't make more bombs there. also put in timer for count down. just a - every frame until doomsday
+OKAY bombs draw now. need to put in update to map so it can't make more bombs there. DONE
+
+also put in timer for count down. just a - every frame until doomsday

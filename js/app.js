@@ -43,12 +43,12 @@ class bomb {
         }
       };
       
-      this.boom = () =>{
+      this.boom = function (){
         //bomb exploding stuff. 
         //probably removing itself and creating and instance of the explosion type.
       };
 
-      this.drawBomb = ()=>{
+      this.drawBomb = function (){
         let sourceX =  (this.sprCol -1) * 16;
         let sourceY = (this.sprRow -1) * 16;
           // console.log("SX", sourceX);
@@ -67,61 +67,66 @@ class bomb {
   }
 }
 
-
-///////////////
-////MAPS
-
-var map = {
-  cols: 11,
-  rows: 8,
-  tSize: 16,
-  mSize: 4,//size increase as a multiple
-  atlasCol: 15,
-  atlasRow: 7, 
-  tiles: [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
-    0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
-    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
-    0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
-    0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
-    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
-    0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0
-  ],
-  drawMap: () =>{
+class levelMap {
+  constructor(layout){
+  this.cols = 11;
+  this.rows= 8;
+  this.tSize= 16;
+  this.mSize= 4;//size increase as a multiple
+  this.atlasCol= 15;
+  this.atlasRow= 7;
+  this.tiles= layout;
+  this.drawMap = function (){
     let mapIndex = 0;
     let sourceX = 0;
     let sourceY = 0;
-    let mapHeight = map.rows * map.tSize;
-    let mapWidth = map.cols * map.tSize;
-    tileMap = img;
+    let mapHeight = this.rows * this.tSize;
+    let mapWidth = this.cols * this.tSize;
+    let tileMap = img;
 
-    for (let c = 0; c < mapHeight; c+= map.tSize) {
+    for (let c = 0; c < mapHeight; c+= this.tSize) {
       console.log("c", c);
-          for (let r = 0; r < mapWidth; r += map.tSize) {
+          for (let r = 0; r < mapWidth; r += this.tSize) {
             console.log("r", r);
-            let tile = map.tiles[mapIndex];
+            let tile = this.tiles[mapIndex];
             if (tile !== 0) { // 0 => empty tile
               tile -= 1;
-              sourceX =  Math.floor(tile % map.atlasCol) * map.tSize; //if over tilemap width its takes remainder and measures from 0
-              sourceY =  Math.floor(tile / map.atlasCol) * map.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
+              sourceX =  Math.floor(tile % this.atlasCol) * this.tSize; //if over tilemap width its takes remainder and measures from 0
+              sourceY =  Math.floor(tile / this.atlasCol) * this.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
               context.drawImage(
                 tileMap, // image source
                 sourceX, // x on tilemap to cut from
                 sourceY, // y on tilemap to cut from
-                map.tSize, // source tile width
-                map.tSize, // source tile height
-                r * map.mSize, // target x on canvas
-                c * map.mSize, // target y on canvas
-                map.mSize * map.tSize , // target width on canvas
-                map.mSize * map.tSize // target height on canvas
+                this.tSize, // source tile width
+                this.tSize, // source tile height
+                r * this.mSize, // target x on canvas
+                c * this.mSize, // target y on canvas
+                this.mSize * this.tSize , // target width on canvas
+                this.mSize * this.tSize // target height on canvas
               )
             }
             mapIndex++;
           }
         } 
  }
+}
 };
+
+
+///////////////
+////MAPS
+
+
+ const map = new levelMap([
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
+  0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
+  0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+  0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
+  0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
+  0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+  0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0
+])
 
 const player = {
   cols: 11,
@@ -286,7 +291,7 @@ const drawBombs = ()=>{
 
 document.addEventListener("keydown", player.movePlayer);
 
-
+console.log(map);
 
 ////DEAD CODE GRAVEYARD. DIDN'T WORK BUT FIGURED ID HOLD OFF ON DELETING FOR NOW.
 //#region 
@@ -429,5 +434,59 @@ document.addEventListener("keydown", player.movePlayer);
 //     player.playerUp;
 //   }
 // });
+
+
+// var map = {
+//   cols: 11,
+//   rows: 8,
+//   tSize: 16,
+//   mSize: 4,//size increase as a multiple
+//   atlasCol: 15,
+//   atlasRow: 7, 
+//   tiles: [
+//     0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
+//     0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
+//     0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+//     0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
+//     0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
+//     0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+//     0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+//     0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0
+//   ],
+//   drawMap: function (){
+//     let mapIndex = 0;
+//     let sourceX = 0;
+//     let sourceY = 0;
+//     let mapHeight = this.rows * this.tSize;
+//     let mapWidth = this.cols * this.tSize;
+//     tileMap = img;
+
+//     for (let c = 0; c < mapHeight; c+= this.tSize) {
+//       console.log("c", c);
+//           for (let r = 0; r < mapWidth; r += this.tSize) {
+//             console.log("r", r);
+//             let tile = this.tiles[mapIndex];
+//             if (tile !== 0) { // 0 => empty tile
+//               tile -= 1;
+//               sourceX =  Math.floor(tile % this.atlasCol) * this.tSize; //if over tilemap width its takes remainder and measures from 0
+//               sourceY =  Math.floor(tile / this.atlasCol) * this.tSize;// floor brings to nearest lower whole number. EG.. tile 18 = floor of 1.5 = 1 so tile is grabbed from 1 tile down.
+//               context.drawImage(
+//                 tileMap, // image source
+//                 sourceX, // x on tilemap to cut from
+//                 sourceY, // y on tilemap to cut from
+//                 this.tSize, // source tile width
+//                 this.tSize, // source tile height
+//                 r * this.mSize, // target x on canvas
+//                 c * this.mSize, // target y on canvas
+//                 this.mSize * this.tSize , // target width on canvas
+//                 this.mSize * this.tSize // target height on canvas
+//               )
+//             }
+//             mapIndex++;
+//           }
+//         } 
+//  }
+// };
+
 
 //#endregion
