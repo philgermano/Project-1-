@@ -39,15 +39,16 @@ class bomb {
       this.sprCol = 5;
       this.sprRow = 7;
       this.time = 60;
+      this.sprTime = 8;
       
       this.boom = function (){
        //console.log("boomign");
+       player.tiles[this.bombMapIndex] = 2;
         for (let i = 0; i < mapIndexMods.length; i++) {
             //console.log("looping booming");
-        if( player.tiles[this.bombMapIndex + mapIndexMods[i]] !== 3){
+        if( player.tiles[this.bombMapIndex + mapIndexMods[i]] !== 0){
           console.log("should be making boomlets");
           const boomlet = new explosion(this.row + mapRowMods[i], this.col + mapColMods[i], this.bombMapIndex + mapIndexMods[i]);
-          player.tiles[player.mapIndexMods] = 3;
           explosions.push(boomlet);
           console.log(boomlet);
           console.log(explosions);
@@ -127,9 +128,10 @@ class explosion{
   this.col = col;
   this.bombMapIndex = boomMapIndex;
   this.stage = 1;
-  this.sprCol = 5;
+  this.sprCol = 15;
   this.sprRow = 7;
-  this.time = 60;
+  this.time = 7;
+  this.sprTime = 3;
   
   this.boom = function (){
    
@@ -164,7 +166,7 @@ class explosion{
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
   0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
   0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
-  0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
+  0, 101, 16, 16, 16, 25, 16, 16, 16, 101, 0,
   0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
   0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
   0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
@@ -182,7 +184,7 @@ const player = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 1, 2, 2, 2, 2, 2, 2, 0, 0,
-    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 0, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -221,10 +223,10 @@ const player = {
                     player.tiles[player.playIndex +1] = 1;
                     player.playIndex++;
                     player.playCol++;
-                    console.log(player.playIndex);
+                    //console.log(player.playIndex);
                     // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                     // player.drawPlayer();
-                    console.log(player.tiles);
+                    //console.log(player.tiles);
                 }},
 
                 playerLeft: () =>{
@@ -233,7 +235,7 @@ const player = {
                       player.tiles[player.playIndex -1] = 1;
                       player.playIndex--;
                       player.playCol--;
-                      console.log(player.playIndex);
+                      //console.log(player.playIndex);
                       // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                       // player.drawPlayer();
                   }},
@@ -244,7 +246,7 @@ const player = {
                         player.tiles[player.playIndex - player.cols] = 1;
                         player.playIndex =player.playIndex - player.cols;
                         player.playRow--;
-                        console.log(player.playIndex);
+                        //console.log(player.playIndex);
                         // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                         // player.drawPlayer();
                     }},
@@ -255,7 +257,7 @@ const player = {
                           player.tiles[player.playIndex +player.cols] = 1;
                           player.playIndex = player.playIndex + player.cols;
                           player.playRow++
-                          console.log(player.playIndex);
+                          //console.log(player.playIndex);
                           // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                           // player.drawPlayer();
                       }
@@ -314,14 +316,21 @@ const drawBombs = ()=>{
     
     explosives.forEach((iED) =>{
       iED.drawBomb();
-      iED.time -= 1
+      iED.time -= 1;
+      //times how long until bomb explodes.
+      //times sprite changes on bomb.
+      //put in if else for different numbers so the fuse gets smaller. cycle first 3-4 frames then 5 - 6 for right before explosion
+      iED.sprTime -= 1;
       // console.log(iED);
       console.log(iED.time);
+      if (iED.sprTime <= 0){
+          iED.sprCol++;
+          iED.sprTime = 15;
+    }
       if (iED.time <= 0){
           iED.boom();
-          console.log(iED.boom);
-          explosives.shift();
-
+          //console.log(iED.boom);
+           explosives.shift();
       }
     } ) 
     
@@ -330,15 +339,32 @@ const drawBooms = ()=>{
   // console.log("drawbobs");
      
      explosions.forEach((explo) =>{
+      for (let i = 0; i < explosives.length; i++) {
+        if (explo.bombMapIndex === explosives[i].bombMapIndex){
+          explosives[i].time = 0;
+        }
+        
+      }
+      if (player.playIndex === explo.bombMapIndex){
+        console.log("you died");
+      }
       explo.drawBoom();
-      explo.time -= 1
-       // console.log(iED);
-       console.log(explo.time);
+      explo.time -= 1;
+      explo.sprTime -= 1;
+      // console.log(iED);
+      //console.log(explo.time);
+      if (explo.sprTime <= 0){
+        explo.sprRow--;
+        explo.sprTime = 3;
+    }
+      //   console.log(explo);
+      //  console.log(explo.time);
+      //  console.log(explosions);
+      //  console.log(player.tiles);
        if (explo.time <= 0){
             //explo.boom;
-           
+  
            explosions.shift();
- 
        }
      } ) 
      
