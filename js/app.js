@@ -1,5 +1,17 @@
 let imgLoaded = false;
 
+var cache = document.createElement("CACHE");
+cache.style = "position:absolute;z-index:-1000;opacity:0;";
+document.body.appendChild(cache);
+function preloadImage(url) {
+    var img = new Image();
+    img.src = url;
+    img.style = "position:absolute";
+    cache.appendChild(img);
+}
+
+preloadImage("img/bomb_party_v4.png");
+preloadImage("../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
 
 //target canvas and define it as 2d
 const canvas = document.querySelector("#myCanvas");
@@ -11,11 +23,11 @@ const playCtx = playerLayer.getContext("2d");
 
 
 //list of image assets. will be preloaded in preLoad function
-// const assetList = ["img/tilemap_packed.png",
-//       "img/SORCERER/ENEMIES8bit_Sorcerer Idle U.png",
-//       "img/SORCERER/ENEMIES8bit_Sorcerer Hurt D.png",
-//       "img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png"
-// ]
+const assetList = ["img/tilemap_packed.png",
+      "img/SORCERER/ENEMIES8bit_Sorcerer Idle U.png",
+      "img/bomb_party_v4.png",
+      "img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png"
+]
 
 const img = new Image();
 img.setAttribute("src", "../img/bomb_party_v4.png");
@@ -373,29 +385,28 @@ const drawBooms = ()=>{
  
 
 
-//  map.drawMap();
-//  player.drawPlayer();
+ map.drawMap();
+ player.drawPlayer();
  
- let tick = null ;
-//  setInterval(()=>{
-//   playCtx.clearRect(0, 0, canvas.width, canvas.height);
-//   player.drawPlayer();
-//   drawBombs();
-//   drawBooms();
-//  },100)
-
-
- window.onload = function() {
-  map.drawMap();
+ let tick = setInterval(()=>{
+  playCtx.clearRect(0, 0, canvas.width, canvas.height);
   player.drawPlayer();
+  drawBombs();
+  drawBooms();
+ },100)
 
-    tick = setInterval(()=>{
-    playCtx.clearRect(0, 0, canvas.width, canvas.height);
-    player.drawPlayer();
-    drawBombs();
-    drawBooms();
-   },100)
-}
+
+//  window.onload = function() {
+//   map.drawMap();
+//   player.drawPlayer();
+
+//     tick = setInterval(()=>{
+//     playCtx.clearRect(0, 0, canvas.width, canvas.height);
+//     player.drawPlayer();
+//     drawBombs();
+//     drawBooms();
+//    },100)
+// }
 
 
 
