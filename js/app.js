@@ -1,17 +1,17 @@
-let imgLoaded = false;
+//let imgLoaded = false;
 
-var cache = document.createElement("CACHE");
-cache.style = "position:absolute;z-index:-1000;opacity:0;";
-document.body.appendChild(cache);
-function preloadImage(url) {
-    var img = new Image();
-    img.src = url;
-    img.style = "position:absolute";
-    cache.appendChild(img);
-}
+// var cache = document.createElement("CACHE");
+// cache.style = "position:absolute;z-index:-1000;opacity:0;";
+// document.body.appendChild(cache);
+// function preloadImage(url) {
+//     var img = new Image();
+//     img.src = url;
+//     img.style = "position:absolute";
+//     cache.appendChild(img);
+// }
 
-preloadImage("img/bomb_party_v4.png");
-preloadImage("../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
+// preloadImage("../img/bomb_party_v4.png");
+// preloadImage("../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
 
 //target canvas and define it as 2d
 const canvas = document.querySelector("#myCanvas");
@@ -23,17 +23,13 @@ const playCtx = playerLayer.getContext("2d");
 
 
 //list of image assets. will be preloaded in preLoad function
-const assetList = ["img/tilemap_packed.png",
-      "img/SORCERER/ENEMIES8bit_Sorcerer Idle U.png",
-      "img/bomb_party_v4.png",
-      "img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png"
-]
+
 
 const img = new Image();
-img.setAttribute("src", "../img/bomb_party_v4.png");
+img.setAttribute("src", "./img/bomb_party_v4.png");
 
 const playImg = new Image();
-playImg.setAttribute("src", "../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
+playImg.setAttribute("src", "./img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
 
 const explosives =[];
 const explosions =[];
