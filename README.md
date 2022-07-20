@@ -13,15 +13,15 @@ map made using tilemap in canvas from array layouts.
 Requirements
 
 Plan
-0.Grabbed basic starter assets.
-1. learn about canvas and tilemap making
-2. set up html css basics with canvas on screen
-3. set up layout of a basic map and have it be drawn by canvas
-4. set up player character drawn and move around grid
-5.  spawn bomb
-6. timer for one space explosion
-7. direction blasts like bomberman
-8. player death on bomb
+0.Grabbed basic starter assets. √
+1. learn about canvas and tilemap making√
+2. set up html css basics with canvas on screen√
+3. set up layout of a basic map and have it be drawn by canvas√
+4. set up player character drawn and move around grid√
+5.  spawn bomb√
+6. timer for one space explosion√
+7. direction blasts like bomberman√
+8. player death on bomb√
 9 2nd player
 10. start screen. followed by the other screens if possible(worst case have the game rock a splash screen with everything)
 11. set up collision detection and actual sprite movement rather than grip space moving.

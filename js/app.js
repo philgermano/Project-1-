@@ -47,11 +47,11 @@ class bomb {
         for (let i = 0; i < mapIndexMods.length; i++) {
             //console.log("looping booming");
         if( player.tiles[this.bombMapIndex + mapIndexMods[i]] !== 0){
-          console.log("should be making boomlets");
+          // console.log("should be making boomlets");
           const boomlet = new explosion(this.row + mapRowMods[i], this.col + mapColMods[i], this.bombMapIndex + mapIndexMods[i]);
           explosions.push(boomlet);
-          console.log(boomlet);
-          console.log(explosions);
+          // console.log(boomlet);
+          // console.log(explosions);
         };
       }
         //bomb exploding stuff. 
@@ -95,9 +95,9 @@ class levelMap {
     let tileMap = img;
 
     for (let c = 0; c < mapHeight; c+= this.tSize) {
-      console.log("c", c);
+      //console.log("c", c);
           for (let r = 0; r < mapWidth; r += this.tSize) {
-            console.log("r", r);
+            //console.log("r", r);
             let tile = this.tiles[mapIndex];
             if (tile !== 0) { // 0 => empty tile
               tile -= 1;
@@ -283,8 +283,8 @@ const player = {
             const bomblet = new bomb(player.playRow,player.playCol, player.playIndex);
             player.tiles[player.playIndex] = 3;
             explosives.push(bomblet);
-            console.log(bomblet);
-            console.log(explosives);
+            // console.log(bomblet);
+            // console.log(explosives);
           }
 
           } 
@@ -322,7 +322,7 @@ const drawBombs = ()=>{
       //put in if else for different numbers so the fuse gets smaller. cycle first 3-4 frames then 5 - 6 for right before explosion
       iED.sprTime -= 1;
       // console.log(iED);
-      console.log(iED.time);
+      //console.log(iED.time);
       if (iED.sprTime <= 0){
           iED.sprCol++;
           iED.sprTime = 15;
@@ -346,6 +346,7 @@ const drawBooms = ()=>{
         
       }
       if (player.playIndex === explo.bombMapIndex){
+        clearInterval(tick);
         console.log("you died");
       }
       explo.drawBoom();
@@ -372,22 +373,35 @@ const drawBooms = ()=>{
  
 
 
- map.drawMap();
- player.drawPlayer();
+//  map.drawMap();
+//  player.drawPlayer();
+ 
+ let tick = null ;
+//  setInterval(()=>{
+//   playCtx.clearRect(0, 0, canvas.width, canvas.height);
+//   player.drawPlayer();
+//   drawBombs();
+//   drawBooms();
+//  },100)
 
- const tick = setInterval(()=>{
-  playCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+ window.onload = function() {
+  map.drawMap();
   player.drawPlayer();
-  drawBombs();
-  drawBooms();
- },100)
 
+    tick = setInterval(()=>{
+    playCtx.clearRect(0, 0, canvas.width, canvas.height);
+    player.drawPlayer();
+    drawBombs();
+    drawBooms();
+   },100)
+}
 
 
 
 document.addEventListener("keydown", player.movePlayer);
 
-console.log(map);
+//console.log(map);
 
 ////DEAD CODE GRAVEYARD. DIDN'T WORK BUT FIGURED ID HOLD OFF ON DELETING FOR NOW.
 //#region 
