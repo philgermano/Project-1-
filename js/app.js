@@ -24,6 +24,10 @@ const playImg = new Image();
 playImg.setAttribute("src", "../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
 
 const explosives =[];
+const explosions =[];
+const mapIndexMods =[0,-1,1,11,-11]
+const mapRowMods =[0,0,0,1,-1]
+const mapColMods =[0,-1,1,0,0]
 ///////////////
 ////classes
 class bomb {
@@ -34,16 +38,21 @@ class bomb {
       this.stage = 1;
       this.sprCol = 5;
       this.sprRow = 7;
-
-      this.fuse = ()=>{
-        this.stage++
-
-        if(stage === 6){
-          this.boom();
-        }
-      };
+      this.time = 60;
       
       this.boom = function (){
+       //console.log("boomign");
+        for (let i = 0; i < mapIndexMods.length; i++) {
+            //console.log("looping booming");
+        if( player.tiles[this.bombMapIndex + mapIndexMods[i]] !== 3){
+          console.log("should be making boomlets");
+          const boomlet = new explosion(this.row + mapRowMods[i], this.col + mapColMods[i], this.bombMapIndex + mapIndexMods[i]);
+          player.tiles[player.mapIndexMods] = 3;
+          explosions.push(boomlet);
+          console.log(boomlet);
+          console.log(explosions);
+        };
+      }
         //bomb exploding stuff. 
         //probably removing itself and creating and instance of the explosion type.
       };
@@ -112,6 +121,40 @@ class levelMap {
 }
 };
 
+class explosion{
+  constructor (row, col, boomMapIndex){
+  this.row = row;
+  this.col = col;
+  this.bombMapIndex = boomMapIndex;
+  this.stage = 1;
+  this.sprCol = 5;
+  this.sprRow = 7;
+  this.time = 60;
+  
+  this.boom = function (){
+   
+    //bomb exploding stuff. 
+    //probably removing itself and creating and instance of the explosion type.
+  };
+
+  this.drawBoom = function (){
+    let sourceX =  (this.sprCol -1) * 16;
+    let sourceY = (this.sprRow -1) * 16;
+      // console.log("SX", sourceX);
+      // console.log("SY",sourceY);
+    playCtx.drawImage(
+                  img, // image source
+                  sourceX, // x on tilemap to cut from
+                  sourceY, // y on tilemap to cut from
+                  map.tSize, // source tile width
+                  map.tSize, // source tile height
+                  this.col * (map.mSize * map.tSize), // target x on canvas
+                  this.row * (map.mSize * map.tSize), // target y on canvas
+                  map.mSize * map.tSize , // target width on canvas
+                  map.mSize * map.tSize // target height on canvas
+    )}
+}
+}
 
 ///////////////
 ////MAPS
@@ -271,10 +314,36 @@ const drawBombs = ()=>{
     
     explosives.forEach((iED) =>{
       iED.drawBomb();
+      iED.time -= 1
       // console.log(iED);
+      console.log(iED.time);
+      if (iED.time <= 0){
+          iED.boom();
+          console.log(iED.boom);
+          explosives.shift();
+
+      }
     } ) 
     
 }
+const drawBooms = ()=>{
+  // console.log("drawbobs");
+     
+     explosions.forEach((explo) =>{
+      explo.drawBoom();
+      explo.time -= 1
+       // console.log(iED);
+       console.log(explo.time);
+       if (explo.time <= 0){
+            //explo.boom;
+           
+           explosions.shift();
+ 
+       }
+     } ) 
+     
+ }
+ 
 
 
  map.drawMap();
@@ -284,6 +353,7 @@ const drawBombs = ()=>{
   playCtx.clearRect(0, 0, canvas.width, canvas.height);
   player.drawPlayer();
   drawBombs();
+  drawBooms();
  },100)
 
 
