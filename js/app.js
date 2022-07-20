@@ -51,7 +51,7 @@ class bomb {
       
       this.boom = function (){
        //console.log("boomign");
-       player.tiles[this.bombMapIndex] = 2;
+       //player.tiles[this.bombMapIndex] = 2;
         for (let i = 0; i < mapIndexMods.length; i++) {
             //console.log("looping booming");
         if( player.tiles[this.bombMapIndex + mapIndexMods[i]] !== 0){
@@ -60,6 +60,7 @@ class bomb {
           explosions.push(boomlet);
           // console.log(boomlet);
           // console.log(explosions);
+          //player.tiles[this.bombMapIndex + mapIndexMods[i]] = 2;
         };
       }
         //bomb exploding stuff. 
@@ -234,7 +235,7 @@ const player = {
                     //console.log(player.playIndex);
                     // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                     // player.drawPlayer();
-                    //console.log(player.tiles);
+                    console.log(player.tiles);
                 }},
 
                 playerLeft: () =>{
@@ -306,17 +307,17 @@ const player = {
 //////FUNCTIONS
 /////////////////
 //runs through asset array and sets them as links in head to preload them. Does preload but need to set it to run other things after the load is done.
-const preLoad = (assets) =>{
-  for (let i = 0; i < assets.length; i++) {        
-      let res = document.createElement("link");
-      res.rel = "preload";
-      res.as = "image";
-      res.href = assets[i];
-      document.head.appendChild(res);
-      console.log(res);
-  }
-    imgLoaded = true;
-}   
+// const preLoad = (assets) =>{
+//   for (let i = 0; i < assets.length; i++) {        
+//       let res = document.createElement("link");
+//       res.rel = "preload";
+//       res.as = "image";
+//       res.href = assets[i];
+//       document.head.appendChild(res);
+//       console.log(res);
+//   }
+//     imgLoaded = true;
+// }   
 
 
 const drawBombs = ()=>{
@@ -336,6 +337,7 @@ const drawBombs = ()=>{
           iED.sprTime = 15;
     }
       if (iED.time <= 0){
+        player.tiles[iED.bombMapIndex] = 2;
           iED.boom();
           //console.log(iED.boom);
            explosives.shift();
@@ -344,12 +346,17 @@ const drawBombs = ()=>{
     
 }
 const drawBooms = ()=>{
-  // console.log("drawbobs");
+  // console.log("drawbombs");
      
      explosions.forEach((explo) =>{
+      player.tiles[explo.bombMapIndex] = 2;
       for (let i = 0; i < explosives.length; i++) {
+        // console.log(explosives[i]);
+        // console.log(explo);
         if (explo.bombMapIndex === explosives[i].bombMapIndex){
           explosives[i].time = 0;
+          explosives[i].boom();
+          explosives.splice(i,1,);
         }
         
       }
@@ -372,7 +379,8 @@ const drawBooms = ()=>{
       //  console.log(player.tiles);
        if (explo.time <= 0){
             //explo.boom;
-  
+
+           //player.tiles[explo.bombMapIndex] = 2;
            explosions.shift();
        }
      } ) 
