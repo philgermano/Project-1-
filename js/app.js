@@ -23,7 +23,7 @@ const playCtx = playerLayer.getContext("2d");
 
 
 //list of image assets. will be preloaded in preLoad function
-
+const boomSound = new Audio("./img/8-Bit-SFX_Explosion-2.mp3")
 
 const img = new Image();
 img.setAttribute("src", "./img/bomb_party_v4.png");
@@ -417,6 +417,7 @@ const drawBombs = ()=>{
       if (iED.time <= 0){
         player.tiles[iED.bombMapIndex] = 2;
           iED.boom();
+          boomSound.play();
           //console.log(iED.boom);
            explosives.shift();
             //ticks down timer so explosions vanish once done.
