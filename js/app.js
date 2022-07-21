@@ -183,123 +183,148 @@ class explosion{
 ])
 
 const player = {
+  /////num represent the player number
   cols: 11,
   rows: 8,
   tSize: 16,
   mSize: 4,//size increase as a multiple
-  atlasCol: 8,
-  atlasRow: 1, 
+  atlasCol: [8, 8],
+  atlasRow: [1,1], 
+  sprCol: [2,2],
+  sprRow: [3,3],
   tiles: [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 1, 2, 2, 2, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 2, 0, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
-    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 2, 2, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
   ],
-  playIndex: 24,
-  playCol: 2,
-  playRow: 2,
+  playIndex: [24,63],
+  playCol: [2,8],
+  playRow: [2,5],
 
-  pMarkCur: () =>{
-    if(player.tiles[player.playIndex] === 1){
-      player.tiles[player.playIndex] = 2;
+  pMarkCur: (num) =>{
+    if(player.tiles[player.playIndex[num]] === 1){
+      player.tiles[player.playIndex[num]] = 2;
 };
   },
 
 
-  drawPlayer: () =>{
+  drawPlayer: (num) =>{
+console.log(num);
+console.log(player.playCol[num]);
+    let sourceX =  (player.sprCol[num] -1) * 16;
+    let sourceY = (player.sprRow[num] -1) * 16;
 
     playCtx.drawImage(
-                  playImg, // image source
-                  0, // x on tilemap to cut from
-                  0, // y on tilemap to cut from
+              img, // image source
+              sourceX, // x on tilemap to cut from
+              sourceY, // y on tilemap to cut from
                   player.tSize, // source tile width
                   player.tSize, // source tile height
-                  player.playCol * (player.mSize * player.tSize), // target x on canvas
-                  player.playRow * (player.mSize * player.tSize), // target y on canvas
+                  player.playCol[num] * (player.mSize * player.tSize), // target x on canvas
+                  player.playRow[num] * (player.mSize * player.tSize), // target y on canvas
                   player.mSize * player.tSize , // target width on canvas
                   player.mSize * player.tSize // target height on canvas
                 )
 
           },
 
-            playerRight: () =>{
-                if (player.tiles[player.playIndex +1] === 2){
-                    player.pMarkCur();
-                    player.tiles[player.playIndex +1] = 1;
-                    player.playIndex++;
-                    player.playCol++;
+            playerRight: (num) =>{
+                if (player.tiles[player.playIndex[num] +1] === 2){
+                    player.pMarkCur(num);
+                    player.tiles[player.playIndex[num] +1] = 1;
+                    player.playIndex[num]++;
+                    player.playCol[num]++;
                     //console.log(player.playIndex);
                     // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                     // player.drawPlayer();
                     console.log(player.tiles);
                 }},
 
-                playerLeft: () =>{
-                  if (player.tiles[player.playIndex -1] === 2){
-                      player.pMarkCur();
-                      player.tiles[player.playIndex -1] = 1;
-                      player.playIndex--;
-                      player.playCol--;
+                playerLeft: (num) =>{
+                  if (player.tiles[player.playIndex[num] -1] === 2){
+                      player.pMarkCur(num);
+                      player.tiles[player.playIndex[num] -1] = 1;
+                      player.playIndex[num]--;
+                      player.playCol[num]--;
                       //console.log(player.playIndex);
                       // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                       // player.drawPlayer();
                   }},
 
-                  playerUp: () =>{
-                    if (player.tiles[player.playIndex - player.cols] === 2){
-                        player.pMarkCur();
-                        player.tiles[player.playIndex - player.cols] = 1;
-                        player.playIndex =player.playIndex - player.cols;
-                        player.playRow--;
+                  playerUp: (num) =>{
+                    if (player.tiles[player.playIndex[num] - player.cols] === 2){
+                        player.pMarkCur(num);
+                        player.tiles[player.playIndex[num] - player.cols] = 1;
+                        player.playIndex[num] =player.playIndex[num] - player.cols;
+                        player.playRow[num]--;
                         //console.log(player.playIndex);
                         // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                         // player.drawPlayer();
                     }},
 
-                    playerDown: () =>{
-                      if (player.tiles[player.playIndex + player.cols] === 2){
-                          player.pMarkCur();
-                          player.tiles[player.playIndex +player.cols] = 1;
-                          player.playIndex = player.playIndex + player.cols;
-                          player.playRow++
+                    playerDown: (num) =>{
+                      if (player.tiles[player.playIndex[num] + player.cols] === 2){
+                          player.pMarkCur(num);
+                          player.tiles[player.playIndex[num] +player.cols] = 1;
+                          player.playIndex[num] = player.playIndex[num] + player.cols;
+                          player.playRow[num]++
                           //console.log(player.playIndex);
                           // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                           // player.drawPlayer();
-                      }
+                      }},
 
+                      plantBomb: (num) =>{
+                        if( player.tiles[player.playIndex[num]] !== 3){
+                          const bomblet = new bomb(player.playRow[num],player.playCol[num], player.playIndex[num]);
+                          player.tiles[player.playIndex] = 3;
+                          explosives.push(bomblet);
+                          // console.log(bomblet);
+                          // console.log(explosives);
 
-            },
+                      }},
 
             movePlayer( {keyCode}){
           if (keyCode === 37){
             //left
-            player.playerLeft();
+            player.playerLeft(0);
           }else if (keyCode === 39  ){
             //right
-            player.playerRight();
+            player.playerRight(0);
           }else if ( keyCode === 38 ){
             //up
-            player.playerUp();
+            player.playerUp(0);
           }else if ( keyCode === 40){
             //down
-            player.playerDown();
+            player.playerDown(0);
           }else if( keyCode === 16 ){
-            if( player.tiles[player.playIndex] !== 3){
-            const bomblet = new bomb(player.playRow,player.playCol, player.playIndex);
-            player.tiles[player.playIndex] = 3;
-            explosives.push(bomblet);
-            // console.log(bomblet);
-            // console.log(explosives);
+           //bomb
+           player.plantBomb(0);
+          }else if (keyCode === 65){
+            //left player 2
+            player.playerLeft(1);
+          }else if (keyCode === 68  ){
+            //right player 2
+            player.playerRight(1);
+          }else if ( keyCode === 87 ){
+            //up player 2
+            player.playerUp(1);
+          }else if ( keyCode === 83){
+            //down player 2
+            player.playerDown(1);
+          }else if( keyCode === 32 ){
+           //bomb player
+           player.plantBomb(1);
           }
 
           } 
-            },
+     }
             
-}
+
 
 
 
@@ -360,7 +385,7 @@ const drawBooms = ()=>{
         }
         
       }
-      if (player.playIndex === explo.bombMapIndex){
+      if (player.playIndex[0] === explo.bombMapIndex){
         clearInterval(tick);
         console.log("you died");
       }
@@ -390,11 +415,12 @@ const drawBooms = ()=>{
 
 
  map.drawMap();
- player.drawPlayer();
+ player.drawPlayer(0);
  
  let tick = setInterval(()=>{
   playCtx.clearRect(0, 0, canvas.width, canvas.height);
-  player.drawPlayer();
+  player.drawPlayer(0);
+  player.drawPlayer(1);
   drawBombs();
   drawBooms();
  },100)
