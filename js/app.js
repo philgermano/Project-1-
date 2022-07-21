@@ -36,6 +36,8 @@ const explosions =[];
 const mapIndexMods =[0,-1,1,11,-11]
 const mapRowMods =[0,0,0,1,-1]
 const mapColMods =[0,-1,1,0,0]
+
+let moveDelay = null;
 ///////////////
 ////classes
 class bomb {
@@ -46,8 +48,8 @@ class bomb {
       this.stage = 1;
       this.sprCol = 5;
       this.sprRow = 7;
-      this.time = 60;
-      this.sprTime = 8;
+      this.time = 36;
+      this.sprTime = 6;
       
       this.boom = function (){
        //console.log("boomign");
@@ -89,7 +91,7 @@ class bomb {
 class levelMap {
   constructor(layout){
   this.cols = 11;
-  this.rows= 8;
+  this.rows= 10;
   this.tSize= 16;
   this.mSize= 4;//size increase as a multiple
   this.atlasCol= 15;
@@ -174,10 +176,12 @@ class explosion{
  const map = new levelMap([
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
   0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
-  0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+  0, 101, 17, 25, 17, 17, 17, 17, 17, 101, 0,
   0, 101, 16, 16, 16, 25, 16, 16, 16, 101, 0,
-  0, 101, 16, 16, 16, 16, 16, 16, 16, 101, 0,
-  0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+  0, 101, 16, 25, 25, 25, 25, 25, 16, 101, 0,
+  0, 101, 17, 17, 17, 25, 17, 17, 17, 101, 0,
+  0, 101, 17, 25, 17, 17, 17, 17, 17, 101, 0,
+  0, 101, 17, 17, 17, 17, 17, 25, 17, 101, 0,
   0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0
 ])
@@ -185,40 +189,74 @@ class explosion{
 const player = {
   /////num represent the player number
   cols: 11,
-  rows: 8,
+  rows: 10,
   tSize: 16,
   mSize: 4,//size increase as a multiple
   atlasCol: [8, 8],
   atlasRow: [1,1], 
   sprCol: [2,2],
-  sprRow: [3,3],
+  sprRow: [3,5],
   tiles: [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 1, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 1, 0, 2, 2, 2, 2, 2, 0, 0,
     0, 0, 2, 2, 2, 0, 2, 2, 2, 0, 0,
-    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
-    0, 0, 2, 2, 2, 2, 2, 2, 1, 0, 0,
+    0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0,
+    0, 0, 2, 2, 2, 0, 2, 2, 2, 0, 0,
+    0, 0, 2, 0, 2, 2, 2, 2, 2, 0, 0, 
+    0, 0, 2, 2, 2, 2, 2, 0, 1, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
   ],
-  playIndex: [24,63],
+  playIndex: [24,85],
   playCol: [2,8],
-  playRow: [2,5],
-
+  playRow: [2,7],
+  faceLeft: [false, false],
+  timeDelay:[false,false],
+//marks current tile as open
   pMarkCur: (num) =>{
     if(player.tiles[player.playIndex[num]] === 1){
       player.tiles[player.playIndex[num]] = 2;
 };
   },
+///sets delay so player cant rapid move or jump diangals
+  delayMove: function(num){
+    player.timeDelay[num] = true;
+    //console.log(player.timeDelay[num]);
+    setTimeout(()=>{
+      player.timeDelay[num] = false;
+      //console.log(player.timeDelay[num]);
+    },100)
+  },
 
-
+//draws player
   drawPlayer: (num) =>{
-console.log(num);
-console.log(player.playCol[num]);
+//console.log(num);
+//console.log(player.playCol[num]);
     let sourceX =  (player.sprCol[num] -1) * 16;
     let sourceY = (player.sprRow[num] -1) * 16;
+if (player.faceLeft[num] === true){
+  playCtx.save();
+  playCtx.scale(-1, 1);
+  //draws player with canvas reversed then reverses scale ofter player is drawn for left facing movement.
 
+  //console.log(player.faceLeft);
+
+  playCtx.drawImage(
+    img, // image source
+    sourceX, // x on tilemap to cut from
+    sourceY, // y on tilemap to cut from
+        player.tSize, // source tile width
+        player.tSize, // source tile height
+        (player.playCol[num] * (player.mSize * player.tSize)* -1), // target x on canvas
+        player.playRow[num] * (player.mSize * player.tSize), // target y on canvas
+        ((player.mSize * player.tSize) * -1), // target width on canvas
+        player.mSize * player.tSize // target height on canvas
+      )
+
+      playCtx.restore();
+
+} else {
     playCtx.drawImage(
               img, // image source
               sourceX, // x on tilemap to cut from
@@ -230,64 +268,77 @@ console.log(player.playCol[num]);
                   player.mSize * player.tSize , // target width on canvas
                   player.mSize * player.tSize // target height on canvas
                 )
-
+            }
           },
-
+                  //player movement for moving
+                  ///activates delayMove, changes current tile to open and moves player location on map and his other tracking variables. Also changes sprite index.
             playerRight: (num) =>{
-                if (player.tiles[player.playIndex[num] +1] === 2){
+                if (player.tiles[player.playIndex[num] +1] === 2 && player.timeDelay[num] === false){
+                    player.delayMove(num);
                     player.pMarkCur(num);
                     player.tiles[player.playIndex[num] +1] = 1;
                     player.playIndex[num]++;
                     player.playCol[num]++;
+                    player.sprCol[num] = 5;
+                    player.faceLeft[num] = false;
                     //console.log(player.playIndex);
                     // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                     // player.drawPlayer();
-                    console.log(player.tiles);
+                    //console.log(player.tiles);
                 }},
 
                 playerLeft: (num) =>{
-                  if (player.tiles[player.playIndex[num] -1] === 2){
+                  if (player.tiles[player.playIndex[num] -1] === 2 && player.timeDelay[num] === false){
+                    player.delayMove(num);
                       player.pMarkCur(num);
                       player.tiles[player.playIndex[num] -1] = 1;
                       player.playIndex[num]--;
                       player.playCol[num]--;
+                      player.sprCol[num] = 5;
+                      player.faceLeft[num] = true;
                       //console.log(player.playIndex);
                       // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                       // player.drawPlayer();
                   }},
 
                   playerUp: (num) =>{
-                    if (player.tiles[player.playIndex[num] - player.cols] === 2){
+                    if (player.tiles[player.playIndex[num] - player.cols] === 2 && player.timeDelay[num] === false){
+                      player.delayMove(num);
                         player.pMarkCur(num);
                         player.tiles[player.playIndex[num] - player.cols] = 1;
                         player.playIndex[num] =player.playIndex[num] - player.cols;
                         player.playRow[num]--;
+                        player.sprCol[num] = 1;
+                        player.faceLeft[num] = false;
                         //console.log(player.playIndex);
                         // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                         // player.drawPlayer();
                     }},
 
                     playerDown: (num) =>{
-                      if (player.tiles[player.playIndex[num] + player.cols] === 2){
+                      if (player.tiles[player.playIndex[num] + player.cols] === 2 && player.timeDelay[num] === false){
+                        player.delayMove(num);
                           player.pMarkCur(num);
                           player.tiles[player.playIndex[num] +player.cols] = 1;
                           player.playIndex[num] = player.playIndex[num] + player.cols;
-                          player.playRow[num]++
+                          player.playRow[num]++;
+                          player.sprCol[num] = 2;
+                          player.faceLeft[num] = false;
                           //console.log(player.playIndex);
                           // playCtx.clearRect(0, 0, canvas.width, canvas.height);
                           // player.drawPlayer();
                       }},
-
+                          //creates and places bomb. adds to array for drawing bombs and marks tile as having a bomb on map.
                       plantBomb: (num) =>{
                         if( player.tiles[player.playIndex[num]] !== 3){
                           const bomblet = new bomb(player.playRow[num],player.playCol[num], player.playIndex[num]);
-                          player.tiles[player.playIndex] = 3;
+                          player.tiles[player.playIndex[num]] = 3;
                           explosives.push(bomblet);
                           // console.log(bomblet);
                           // console.log(explosives);
 
                       }},
-
+                  //tracks keys and actives functions for either player 1 or two
             movePlayer( {keyCode}){
           if (keyCode === 37){
             //left
@@ -347,32 +398,35 @@ console.log(player.playCol[num]);
 
 const drawBombs = ()=>{
  // console.log("drawbobs");
-    
+    //cycles through bomb array
     explosives.forEach((iED) =>{
       iED.drawBomb();
       iED.time -= 1;
       //times how long until bomb explodes.
       //times sprite changes on bomb.
-      //put in if else for different numbers so the fuse gets smaller. cycle first 3-4 frames then 5 - 6 for right before explosion
+              //put in if else for different numbers so the fuse gets smaller. cycle first 3-4 frames then 5 - 6 for right before explosion  BIG MAYBE. far more important stuff
       iED.sprTime -= 1;
       // console.log(iED);
       //console.log(iED.time);
       if (iED.sprTime <= 0){
           iED.sprCol++;
-          iED.sprTime = 15;
+          iED.sprTime = 6;
+          //advances through bomb sprites
+          //resets sprite timer for next sprite advance
     }
       if (iED.time <= 0){
         player.tiles[iED.bombMapIndex] = 2;
           iED.boom();
           //console.log(iED.boom);
            explosives.shift();
+            //ticks down timer so explosions vanish once done.
       }
     } ) 
     
 }
 const drawBooms = ()=>{
   // console.log("drawbombs");
-     
+          //cycles through explosion array
      explosions.forEach((explo) =>{
       player.tiles[explo.bombMapIndex] = 2;
       for (let i = 0; i < explosives.length; i++) {
@@ -382,13 +436,23 @@ const drawBooms = ()=>{
           explosives[i].time = 0;
           explosives[i].boom();
           explosives.splice(i,1,);
+          //ticks down timer so explosions vanish once done.
         }
         
       }
       if (player.playIndex[0] === explo.bombMapIndex){
+        //player dies if they hit an explosion
+        //need a version for each player and to draw a canvas element for death pop up. give option for rematch or map select
         clearInterval(tick);
-        console.log("you died");
-      }
+        console.log("player 1 died");
+      };
+      if (player.playIndex[1] === explo.bombMapIndex){
+        //player dies if they hit an explosion
+        //need a version for each player and to draw a canvas element for death pop up. give option for rematch or map select
+        clearInterval(tick);
+        console.log("player 2 died");
+      };
+      //draws bomb and cuts timer for explosion life and sprite image advancer.
       explo.drawBoom();
       explo.time -= 1;
       explo.sprTime -= 1;
@@ -396,15 +460,17 @@ const drawBooms = ()=>{
       //console.log(explo.time);
       if (explo.sprTime <= 0){
         explo.sprRow--;
-        explo.sprTime = 3;
-    }
+        explo.sprTime = 3; 
+        //advances through explosion sprites
+          //resets sprite timer for next sprite advance
+      }
       //   console.log(explo);
       //  console.log(explo.time);
       //  console.log(explosions);
       //  console.log(player.tiles);
        if (explo.time <= 0){
             //explo.boom;
-
+                        //timer hits 0 remove explosion from array so it essentially no longer exists next draw tick.
            //player.tiles[explo.bombMapIndex] = 2;
            explosions.shift();
        }
@@ -418,6 +484,7 @@ const drawBooms = ()=>{
  player.drawPlayer(0);
  
  let tick = setInterval(()=>{
+          ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
   playCtx.clearRect(0, 0, canvas.width, canvas.height);
   player.drawPlayer(0);
   player.drawPlayer(1);
@@ -439,7 +506,7 @@ const drawBooms = ()=>{
 // }
 
 
-
+//catches key presses and feeds them to a player method which in turn splits them up into inputs for player 1 or 2
 document.addEventListener("keydown", player.movePlayer);
 
 //console.log(map);
