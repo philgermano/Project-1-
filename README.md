@@ -22,7 +22,7 @@ Plan
 6. timer for one space explosion√
 7. direction blasts like bomberman√
 8. player death on bomb√
-9 2nd player
+9 2nd player√
 10. start screen. followed by the other screens if possible(worst case have the game rock a splash screen with everything)
 11. set up collision detection and actual sprite movement rather than grip space moving.
 12.
@@ -51,21 +51,21 @@ player 1 movement
 
 
 //resources
+Sprite sheet
 https://opengameart.org/content/bomb-party-the-second-expansion
-game sprite sheet 16x16 7 high 15 wide
+
+Bomb sound effect
+https://audiosoundclips.com/8-bit-explosion-blast-sound-effects-sfx/
+
 
 
 TO DO when back.
 
-note will need player to set current position to be a 0 so other players cant enter there. also bombs whihc will reset to 2 on explosion.
+Need to make a game state tracker. swaps from start menu to level select to game mode. just use canvas to do a simple mock up. if in map select and hit enter disable controls kill select and start game tick. 
 
-drawing is done by one function. logic by another.
+also add in a pop up for player death.
 
-bomb is a class player makes a new instance of that class. so each bomb can count it stuff like x,y and timers.DONE
+find game music
+add in match timer for force combat
 
-bombs get placed to array. then loop through the array. DONE
-
-
-OKAY bombs draw now. need to put in update to map so it can't make more bombs there. DONE
-
-also put in timer for count down. just a - every frame until doomsday
+use string interpolation for game timer and for menu option toggles.

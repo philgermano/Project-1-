@@ -1,17 +1,4 @@
-//let imgLoaded = false;
 
-// var cache = document.createElement("CACHE");
-// cache.style = "position:absolute;z-index:-1000;opacity:0;";
-// document.body.appendChild(cache);
-// function preloadImage(url) {
-//     var img = new Image();
-//     img.src = url;
-//     img.style = "position:absolute";
-//     cache.appendChild(img);
-// }
-
-// preloadImage("../img/bomb_party_v4.png");
-// preloadImage("../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
 
 //target canvas and define it as 2d
 const canvas = document.querySelector("#myCanvas");
@@ -20,7 +7,8 @@ const context = canvas.getContext("2d");
 const playerLayer = document.querySelector("#playerLayer");
 const playCtx = playerLayer.getContext("2d");
 
-
+const uiLayer = document.querySelector("#uiLayer");
+const uiCtx = playerLayer.getContext("2d");
 
 //list of image assets. will be preloaded in preLoad function
 const boomSound = new Audio("./img/8-Bit-SFX_Explosion-2.mp3")
@@ -36,8 +24,10 @@ const explosions =[];
 const mapIndexMods =[0,-1,1,11,-11]
 const mapRowMods =[0,0,0,1,-1]
 const mapColMods =[0,-1,1,0,0]
-
+let tick = null;
 let moveDelay = null;
+
+let gameState = "start";
 ///////////////
 ////classes
 class bomb {
@@ -208,6 +198,7 @@ const player = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
   ],
+  
   playIndex: [24,85],
   playCol: [2,8],
   playRow: [2,7],
@@ -370,8 +361,8 @@ if (player.faceLeft[num] === true){
           }else if( keyCode === 32 ){
            //bomb player
            player.plantBomb(1);
-          }
-
+          }else if(gameState === "over")
+            matchReset();
           } 
      }
             
@@ -382,18 +373,59 @@ if (player.faceLeft[num] === true){
 /////////////////
 //////FUNCTIONS
 /////////////////
-//runs through asset array and sets them as links in head to preload them. Does preload but need to set it to run other things after the load is done.
-// const preLoad = (assets) =>{
-//   for (let i = 0; i < assets.length; i++) {        
-//       let res = document.createElement("link");
-//       res.rel = "preload";
-//       res.as = "image";
-//       res.href = assets[i];
-//       document.head.appendChild(res);
-//       console.log(res);
-//   }
-//     imgLoaded = true;
-// }   
+const matchStart = () =>{
+  gameState = "start"
+  tick = setInterval(()=>{
+    ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
+playCtx.clearRect(0, 0, canvas.width, canvas.height);
+player.drawPlayer(0);
+player.drawPlayer(1);
+drawBombs();
+drawBooms();
+},100)
+
+} 
+
+
+const matchReset = () =>{
+
+  explosions.length = 0;
+  // while(explosions.length >0){
+  //   explosions.pop();
+  // }
+
+  explosives.length = 0;
+  // while(explosives.length >0){
+  //   explosives.pop();
+  // }
+
+
+ //resets obj values
+  player.atlasCol = [8, 8];
+  player.atlasRow = [1,1];
+  player.sprCol = [2,2];
+  player.sprRow = [3,5];
+  player.tiles = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 0, 2, 2, 2, 0, 0,
+    0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0,
+    0, 0, 2, 2, 2, 0, 2, 2, 2, 0, 0,
+    0, 0, 2, 0, 2, 2, 2, 2, 2, 0, 0, 
+    0, 0, 2, 2, 2, 2, 2, 0, 1, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+  ];
+  
+  player.playIndex = [24,85];
+  player.playCol = [2,8];
+  player.playRow = [2,7];
+  player.faceLeft = [false, false];
+  player.timeDelay =[false,false];
+
+  matchStart();
+}
 
 
 const drawBombs = ()=>{
@@ -445,13 +477,17 @@ const drawBooms = ()=>{
         //player dies if they hit an explosion
         //need a version for each player and to draw a canvas element for death pop up. give option for rematch or map select
         clearInterval(tick);
-        console.log("player 1 died");
+        console.log("player 1 died. push any button to restart");
+        gameState = "over";
       };
       if (player.playIndex[1] === explo.bombMapIndex){
         //player dies if they hit an explosion
         //need a version for each player and to draw a canvas element for death pop up. give option for rematch or map select
         clearInterval(tick);
-        console.log("player 2 died");
+        console.log("player 2 died.push any button to restart");
+        gameState = "over";
+
+
       };
       //draws bomb and cuts timer for explosion life and sprite image advancer.
       explo.drawBoom();
@@ -484,7 +520,7 @@ const drawBooms = ()=>{
  map.drawMap();
  player.drawPlayer(0);
  
- let tick = setInterval(()=>{
+ tick = setInterval(()=>{
           ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
   playCtx.clearRect(0, 0, canvas.width, canvas.height);
   player.drawPlayer(0);
@@ -494,23 +530,26 @@ const drawBooms = ()=>{
  },100)
 
 
-//  window.onload = function() {
-//   map.drawMap();
-//   player.drawPlayer();
 
-//     tick = setInterval(()=>{
-//     playCtx.clearRect(0, 0, canvas.width, canvas.height);
-//     player.drawPlayer();
-//     drawBombs();
-//     drawBooms();
-//    },100)
-// }
 
 
 //catches key presses and feeds them to a player method which in turn splits them up into inputs for player 1 or 2
 document.addEventListener("keydown", player.movePlayer);
 
 //console.log(map);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ////DEAD CODE GRAVEYARD. DIDN'T WORK BUT FIGURED ID HOLD OFF ON DELETING FOR NOW.
 //#region 
@@ -707,5 +746,43 @@ document.addEventListener("keydown", player.movePlayer);
 //  }
 // };
 
+//  window.onload = function() {
+//   map.drawMap();
+//   player.drawPlayer();
+
+//     tick = setInterval(()=>{
+//     playCtx.clearRect(0, 0, canvas.width, canvas.height);
+//     player.drawPlayer();
+//     drawBombs();
+//     drawBooms();
+//    },100)
+// }
+
+//let imgLoaded = false;
+
+// var cache = document.createElement("CACHE");
+// cache.style = "position:absolute;z-index:-1000;opacity:0;";
+// document.body.appendChild(cache);
+// function preloadImage(url) {
+//     var img = new Image();
+//     img.src = url;
+//     img.style = "position:absolute";
+//     cache.appendChild(img);
+// }
+
+// preloadImage("../img/bomb_party_v4.png");
+// preloadImage("../img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
+//runs through asset array and sets them as links in head to preload them. Does preload but need to set it to run other things after the load is done.
+// const preLoad = (assets) =>{
+//   for (let i = 0; i < assets.length; i++) {        
+//       let res = document.createElement("link");
+//       res.rel = "preload";
+//       res.as = "image";
+//       res.href = assets[i];
+//       document.head.appendChild(res);
+//       console.log(res);
+//   }
+//     imgLoaded = true;
+// }  
 
 //#endregion
