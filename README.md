@@ -23,7 +23,7 @@ The bombs change sprites using a timer that changes the position on the tile map
 
 The only unsolved problems I ran into was autoplaying music and the death bombs overlapping with the game over pop up. Google chrome seems to require interaction before you play music and I didn't find a way around that to allow music auto playing without interaction from the player. The explosions over pop up is something I haven't messed with too much.
 
-I did everything I tried to do, though there are a lot of features I'd like to add. Power ups, kicking bombs away, and multiple maps were possible features I did not get around to doing. A far off one would be swapping fully to fluid movement and collision detection rather than the grid movement I'm using right now.
+I did everything I tried to do, though there are a lot of features I'd like to add. Power ups and kicking bombs away features I did not get around to doing. A far off one would be swapping fully to fluid movement and collision detection rather than the grid movement I'm using right now.
 
 //resources
 Sprite sheet
