@@ -16,12 +16,11 @@ const uiCtx = playerLayer.getContext("2d");
 
 //list of image assets. will be preloaded in preLoad function
 const boomSound = new Audio("./img/8-Bit-SFX_Explosion-2.mp3")
+const menuMusic = new Audio("./img/CyberCafe.mp3")
+const battleMusic = new Audio("./img/Puzzle Battle.mp3")
 
 const img = new Image();
 img.setAttribute("src", "./img/bomb_party_v4.png");
-
-const playImg = new Image();
-playImg.setAttribute("src", "./img/SORCERER/ENEMIES8bit_Sorcerer Idle D.png");
 
 const explosives =[];
 const explosions =[];
@@ -30,7 +29,7 @@ const mapRowMods =[0,0,0,1,-1]
 const mapColMods =[0,-1,1,0,0]
 let tick = null;
 let moveDelay = null;
-
+let choice = "start";
 let gameState = "";
 ///////////////
 ////classes
@@ -336,38 +335,68 @@ if (player.faceLeft[num] === true){
                       }},
                   //tracks keys and actives functions for either player 1 or two
             movePlayer( {keyCode}){
-          if (keyCode === 37){
+          if (keyCode === 37 && gameState === "start"){
             //left
             player.playerLeft(0);
-          }else if (keyCode === 39  ){
+          }else if (keyCode === 39   && gameState === "start" ){
             //right
             player.playerRight(0);
           }else if ( keyCode === 38 ){
             //up
-            player.playerUp(0);
+            if(gameState === "main"){
+              choice = "start";
+            }else if(gameState === "start"){
+                player.playerUp(0);
+            }
           }else if ( keyCode === 40){
             //down
-            player.playerDown(0);
-          }else if( keyCode === 16 ){
+            if(gameState === "main"){
+              choice = "help";
+            } else if(gameState === "start"){
+              player.playerDown(0);
+            }
+          }else if( keyCode === 16  && gameState === "start" ){
            //bomb
            player.plantBomb(0);
-          }else if (keyCode === 65){
+          }else if (keyCode === 65 && gameState === "start" ){
             //left player 2
             player.playerLeft(1);
-          }else if (keyCode === 68  ){
+          }else if (keyCode === 68  && gameState === "start"  ){
             //right player 2
             player.playerRight(1);
-          }else if ( keyCode === 87 ){
+          }else if ( keyCode === 87 && gameState === "start" ){
             //up player 2
             player.playerUp(1);
-          }else if ( keyCode === 83){
+          }else if ( keyCode === 83 && gameState === "start" ){
             //down player 2
             player.playerDown(1);
-          }else if( keyCode === 32 ){
+          }else if( keyCode === 32  && gameState === "start" ){
            //bomb player
            player.plantBomb(1);
-          }else if(gameState === "over")
+          }else if(keyCode === 13)
+          if(choice === "start"){
+            //clear menu. draw top thing and kick on draw map. and player spawn tick.
+            choice = "";
+            clearInterval(tick);
+            menuCtx.clearRect(0, 0, canvas.width, canvas.height);
+            matchStart();
+          }else if(choice === "help" ){
+            //clear menu and draw the game instructions
+            choice = "";
+            gameState = "help";
+            displayHelp();
+          }else if(gameState === "help" ){
+              //clear menu and draw the game instructions
+
+              clearInterval(tick);
+              menuCtx.clearRect(0, 0, canvas.width, canvas.height);
+              gameStart();
+              choice = "start";
+          }else if(gameState === "over"){
             matchReset();
+          }
+          
+              
           } 
      }
             
@@ -379,10 +408,17 @@ if (player.faceLeft[num] === true){
 //////FUNCTIONS
 /////////////////
 const matchStart = () =>{
+  battleMusic.play();
+  clearInterval(tick);
+  menuCtx.clearRect(0, 0, canvas.width, canvas.height);
+  menuCtx.fillStyle = "#555555";
+  menuCtx.fillRect(0 ,0,768 ,768 );
   gameState = "start"
   tick = setInterval(()=>{
+    menuMusic.pause();
     ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
 playCtx.clearRect(0, 0, canvas.width, canvas.height);
+map.drawMap();
 player.drawPlayer(0);
 player.drawPlayer(1);
 drawBombs();
@@ -391,16 +427,108 @@ drawBooms();
 
 } 
 
+const displayHelp = () =>{
+  clearInterval(tick);
+  menuCtx.clearRect(0, 0, canvas.width, canvas.height);
+  tick = setInterval(()=>{
+    menuCtx.fillStyle = "#555555";
+    menuCtx.strokeStyle = "black";
+    menuCtx.lineWidth = 5;
+    
+    menuCtx.font = "60px Rubik Mono One";
+
+    menuCtx.fillRect(0 ,0,768 ,768 );
+
+    menuCtx.fillStyle = "red";
+
+  
+    menuCtx.fillText("Try to blow up", (uiCtx.canvas.width* .5) -350 ,(uiCtx.canvas.height* .5) - 300);
+    menuCtx.strokeText("Try to blow up", (uiCtx.canvas.width* .5) -350 ,(uiCtx.canvas.height* .5) - 300);
+
+    menuCtx.fillText("your opponent", (uiCtx.canvas.width* .5) -320 ,(uiCtx.canvas.height* .5) - 230);
+    menuCtx.strokeText("your opponent", (uiCtx.canvas.width* .5) -320 ,(uiCtx.canvas.height* .5) - 230);
+
+    menuCtx.font = "50px Rubik Mono One";
+
+    menuCtx.fillText("Player 1 controls", (uiCtx.canvas.width* .5) -350 ,(uiCtx.canvas.height* .5) -140);
+    menuCtx.strokeText("Player 1 controls", (uiCtx.canvas.width* .5) -350 ,(uiCtx.canvas.height* .5) -140);
+
+        menuCtx.font = "40px Rubik Mono One";
+        menuCtx.fillStyle = "white";
+
+    menuCtx.fillText("Arrow keys to move", (uiCtx.canvas.width* .5) -300 ,(uiCtx.canvas.height* .5) - 80);
+    menuCtx.strokeText("Arrow keys to move", (uiCtx.canvas.width* .5) -300 ,(uiCtx.canvas.height* .5) - 80);
+
+    menuCtx.fillText("Shift for bombs", (uiCtx.canvas.width* .5) -300 ,(uiCtx.canvas.height* .5) - 20);
+    menuCtx.strokeText("Shift for bombs", (uiCtx.canvas.width* .5) -300 ,(uiCtx.canvas.height* .5) - 20);
+
+         menuCtx.font = "50px Rubik Mono One";
+         menuCtx.fillStyle = "red";
+
+    menuCtx.fillText("Player 2 controls", (uiCtx.canvas.width* .5) -350 ,(uiCtx.canvas.height* .5) + 100);
+    menuCtx.strokeText("Player 2 controls", (uiCtx.canvas.width* .5) -350 ,(uiCtx.canvas.height* .5) + 100);
+
+        menuCtx.font = "40px Rubik Mono One";
+        menuCtx.fillStyle = "white";
+
+    menuCtx.fillText("WASD to move", (uiCtx.canvas.width* .5) -300 ,(uiCtx.canvas.height* .5) + 200 );
+    menuCtx.strokeText("WASD to move", (uiCtx.canvas.width* .5) -300 ,(uiCtx.canvas.height* .5) + 200);
+
+
+    menuCtx.fillText("Space for bombs", (uiCtx.canvas.width* .5) -300 ,(uiCtx.canvas.height* .5) + 250);
+    menuCtx.strokeText("Space for bombs", (uiCtx.canvas.width* .5) -300 ,(uiCtx.canvas.height* .5) + 250);
+
+  },100)
+}
+
 const gameStart = () =>{
+  setTimeout(()=>{
+    menuMusic.play();
+  },1000);
+  
   gameState = "main"
   tick = setInterval(()=>{
+    menuCtx.clearRect(0, 0, canvas.width, canvas.height);
+    menuCtx.fillStyle = "#555555";
+    menuCtx.strokeStyle = "black";
+    menuCtx.lineWidth = 5;
+    menuCtx.font = "70px Rubik Mono One";
+
+    menuCtx.fillRect(0 ,0,768 ,768 );
+
+    menuCtx.fillStyle = "red";
+    menuCtx.lineWidth = 15;
+    menuCtx.strokeText("BOOM    FOR", (uiCtx.canvas.width* .5) -340 ,(uiCtx.canvas.height* .5) - 200,);
+    menuCtx.strokeText("IMPROVEMENT", (uiCtx.canvas.width* .5) -340 ,(uiCtx.canvas.height* .5) - 100,);
+    //menuCtx.font = "70px Chewy";
+    menuCtx.fillText("BOOM    FOR", (uiCtx.canvas.width* .5) -340 ,(uiCtx.canvas.height* .5) - 200,);
+    menuCtx.fillText("IMPROVEMENT", (uiCtx.canvas.width* .5) -340 ,(uiCtx.canvas.height* .5) - 100,);
+    menuCtx.font = "50px Rubik Mono One";
+    
+    menuCtx.lineWidth = 5;
+if(choice === "start"){
+  menuCtx.fillStyle = "yellow";
+}else{
+  menuCtx.fillStyle = "white";
+}
+    menuCtx.fillText("Game Start", (uiCtx.canvas.width* .5) -200 ,(uiCtx.canvas.height* .5) + 70,);
+    menuCtx.strokeText("Game Start", (uiCtx.canvas.width* .5) -200 ,(uiCtx.canvas.height* .5) + 70,);
+        if(choice === "help"){
+          menuCtx.fillStyle = "yellow";
+        }else{
+          menuCtx.fillStyle = "white";
+        }
+    menuCtx.fillText("Help", (uiCtx.canvas.width* .5) -200 ,(uiCtx.canvas.height* .5) + 150,);
+    menuCtx.strokeText("Help", (uiCtx.canvas.width* .5) -200 ,(uiCtx.canvas.height* .5) + 150,);
+
+
     ///Set the game tick rate. essentially frame rate. every frame/tick it clears the menu and redraws showing currently selected option.
 },100)
 
 } 
 
 const matchReset = () =>{
-
+  battleMusic.pause();
   explosions.length = 0;
   // while(explosions.length >0){
   //   explosions.pop();
@@ -486,6 +614,8 @@ const drawBooms = ()=>{
         
       }
       if (player.playIndex[0] === explo.bombMapIndex){
+
+        gameState = "over";
         //player dies if they hit an explosion
         //need a version for each player and to draw a canvas element for death pop up. give option for rematch or map select
         clearInterval(tick);
@@ -507,9 +637,10 @@ const drawBooms = ()=>{
         //uiCtx.drawImage()
 
         //console.log("player 1 died. push any button to restart");
-        gameState = "over";
       };
       if (player.playIndex[1] === explo.bombMapIndex){
+
+        gameState = "over";
         //player dies if they hit an explosion
         //need a version for each player and to draw a canvas element for death pop up. give option for rematch or map select
         clearInterval(tick);
@@ -528,7 +659,6 @@ const drawBooms = ()=>{
 
         uiCtx.fillText("Press Enter to restart.", (uiCtx.canvas.width* .5) -140 ,(uiCtx.canvas.height* .5) + 70,);
         console.log("player 2 died.push any button to restart");
-        gameState = "over";
 
 
       };
@@ -560,19 +690,19 @@ const drawBooms = ()=>{
  
 
 
- map.drawMap();
- player.drawPlayer(0);
+//  map.drawMap();
+//  player.drawPlayer(0);
  
- tick = setInterval(()=>{
-          ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
-  playCtx.clearRect(0, 0, canvas.width, canvas.height);
-  player.drawPlayer(0);
-  player.drawPlayer(1);
-  drawBombs();
-  drawBooms();
- },100)
+//  tick = setInterval(()=>{
+//           ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
+//   playCtx.clearRect(0, 0, canvas.width, canvas.height);
+//   player.drawPlayer(0);
+//   player.drawPlayer(1);
+//   drawBombs();
+//   drawBooms();
+//  },100)
 
-
+gameStart();
 
 
 
