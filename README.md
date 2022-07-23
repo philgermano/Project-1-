@@ -69,3 +69,17 @@ find game music
 add in match timer for force combat
 
 use string interpolation for game timer and for menu option toggles.
+
+
+initial canvas shows start screen. canvas with 3 options
+-start
+-help
+-maybe option- only option currently is sound
+
+help clears canvas and does a function to draw basic instructions
+
+start
+pops to the game screen. map is drawn but not players.
+press right and left to cycle through layouts. press enter to start game tick and spawn players.
+
+on death pop up a box that says x player died. press enter to restart or something to choose a new map Maybe on choose new map.

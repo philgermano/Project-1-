@@ -1,6 +1,10 @@
 
 
 //target canvas and define it as 2d
+
+const menuLayer = document.querySelector("#menuLayer");
+const menuCtx = menuLayer.getContext("2d");
+
 const canvas = document.querySelector("#myCanvas");
 const context = canvas.getContext("2d");
 
@@ -27,7 +31,7 @@ const mapColMods =[0,-1,1,0,0]
 let tick = null;
 let moveDelay = null;
 
-let gameState = "start";
+let gameState = "";
 ///////////////
 ////classes
 class bomb {
@@ -83,7 +87,7 @@ class levelMap {
   this.cols = 11;
   this.rows= 10;
   this.tSize= 16;
-  this.mSize= 4;//size increase as a multiple
+  this.mSize= 4.3;//size increase as a multiple
   this.atlasCol= 15;
   this.atlasRow= 7;
   this.tiles= layout;
@@ -164,14 +168,15 @@ class explosion{
 
 
  const map = new levelMap([
+   
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
-  0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
-  0, 101, 17, 25, 17, 17, 17, 17, 17, 101, 0,
-  0, 101, 16, 16, 16, 25, 16, 16, 16, 101, 0,
-  0, 101, 16, 25, 25, 25, 25, 25, 16, 101, 0,
-  0, 101, 17, 17, 17, 25, 17, 17, 17, 101, 0,
-  0, 101, 17, 25, 17, 17, 17, 17, 17, 101, 0,
-  0, 101, 17, 17, 17, 17, 17, 25, 17, 101, 0,
+  0, 101, 1, 101, 1, 1, 1, 1, 1, 101, 0,
+  0, 101, 17, 1, 17, 17, 17, 17, 17, 101, 0,
+  0, 101, 16, 16, 16, 101, 16, 16, 16, 101, 0,
+  0, 101, 16, 1, 1, 101, 1, 1, 16, 101, 0,
+  0, 101, 17, 17, 17, 1, 17, 17, 17, 101, 0,
+  0, 101, 17, 1, 17, 17, 17, 17, 17, 101, 0,
+  0, 101, 17, 17, 17, 17, 17, 101, 17, 101, 0,
   0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0
 ])
@@ -181,7 +186,7 @@ const player = {
   cols: 11,
   rows: 10,
   tSize: 16,
-  mSize: 4,//size increase as a multiple
+  mSize: 4.3,//size increase as a multiple
   atlasCol: [8, 8],
   atlasRow: [1,1], 
   sprCol: [2,2],
@@ -386,6 +391,13 @@ drawBooms();
 
 } 
 
+const gameStart = () =>{
+  gameState = "main"
+  tick = setInterval(()=>{
+    ///Set the game tick rate. essentially frame rate. every frame/tick it clears the menu and redraws showing currently selected option.
+},100)
+
+} 
 
 const matchReset = () =>{
 
@@ -477,13 +489,44 @@ const drawBooms = ()=>{
         //player dies if they hit an explosion
         //need a version for each player and to draw a canvas element for death pop up. give option for rematch or map select
         clearInterval(tick);
-        console.log("player 1 died. push any button to restart");
+          uiCtx.fillStyle = "white";
+          uiCtx.strokeStyle = "black";
+          uiCtx.lineWidth = 5;
+          uiCtx.font = "30px Arial";
+
+
+          uiCtx.fillRect((uiCtx.canvas.width* .5) -200 ,(uiCtx.canvas.height* .5) - 150, 400, 300);
+          uiCtx.strokeRect((uiCtx.canvas.width* .5) -200 ,(uiCtx.canvas.height* .5) - 150, 400, 300);
+
+          uiCtx.fillStyle = "black";
+
+          uiCtx.fillText("Player 1 lost.", (uiCtx.canvas.width* .5) -90 ,(uiCtx.canvas.height* .5) - 50,);
+
+          uiCtx.fillText("Press Enter to restart.", (uiCtx.canvas.width* .5) -140 ,(uiCtx.canvas.height* .5) + 70,);
+
+        //uiCtx.drawImage()
+
+        //console.log("player 1 died. push any button to restart");
         gameState = "over";
       };
       if (player.playIndex[1] === explo.bombMapIndex){
         //player dies if they hit an explosion
         //need a version for each player and to draw a canvas element for death pop up. give option for rematch or map select
         clearInterval(tick);
+        uiCtx.fillStyle = "white";
+        uiCtx.strokeStyle = "black";
+        uiCtx.lineWidth = 5;
+        uiCtx.font = "30px Arial";
+
+
+        uiCtx.fillRect((uiCtx.canvas.width* .5) -200 ,(uiCtx.canvas.height* .5) - 150, 400, 300);
+        uiCtx.strokeRect((uiCtx.canvas.width* .5) -200 ,(uiCtx.canvas.height* .5) - 150, 400, 300);
+
+        uiCtx.fillStyle = "black";
+
+        uiCtx.fillText("Player 2 lost.", (uiCtx.canvas.width* .5) -90 ,(uiCtx.canvas.height* .5) - 50,);
+
+        uiCtx.fillText("Press Enter to restart.", (uiCtx.canvas.width* .5) -140 ,(uiCtx.canvas.height* .5) + 70,);
         console.log("player 2 died.push any button to restart");
         gameState = "over";
 
