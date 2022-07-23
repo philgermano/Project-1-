@@ -21,9 +21,9 @@ The bombs and explosions are instantiated from 2 classes and are added to arrays
 
 The bombs change sprites using a timer that changes the position on the tile map from which they are drawn. The explosions reference the position of the bombs and place explosions in the open spots in their position and the 4 cardinal directions around them.
 
-The only unsolved problem I ran into was autoplaying music. Google chrome seems to require interaction before you play music and I didn't find a way around that to allow music auto playing without interaction from the player.
+The only unsolved problems I ran into was autoplaying music and the death bombs overlapping with the game over pop up. Google chrome seems to require interaction before you play music and I didn't find a way around that to allow music auto playing without interaction from the player. The explosions over pop up is something I haven't messed with too much.
 
-I did everything I tried to do, though there are a lot of features I'd like to add. Objects that can be blown up, power ups, kicking bombs away, and multiple maps were possible features I did not get around to doing. A far off one would be swapping fully to fluid movement and collision detection rather than the grid movement I'm using right now.
+I did everything I tried to do, though there are a lot of features I'd like to add. Power ups, kicking bombs away, and multiple maps were possible features I did not get around to doing. A far off one would be swapping fully to fluid movement and collision detection rather than the grid movement I'm using right now.
 
 //resources
 Sprite sheet
@@ -33,3 +33,4 @@ Bomb sound effect
 https://audiosoundclips.com/8-bit-explosion-blast-sound-effects-sfx/
 
 Music is from a music pack I had gotten in an asset bundle awhile ago.
+
