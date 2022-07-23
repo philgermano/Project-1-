@@ -22,6 +22,7 @@ const battleMusic = new Audio("./img/Puzzle Battle.mp3")
 const img = new Image();
 img.setAttribute("src", "./img/bomb_party_v4.png");
 
+let delay = false;
 const explosives =[];
 const explosions =[];
 const mapIndexMods =[0,-1,1,11,-11]
@@ -415,7 +416,11 @@ if (player.faceLeft[num] === true){
           if (keyCode === 37 ){
                     if (gameState === "start") {
                       player.playerLeft(0);
-                    }else if (gameState === "select"){
+                    }else if (gameState === "select" && delay === false){
+                      delay = true;
+                      setTimeout(()=>{
+                        delay = false;
+                      },500);
                       mapInd--
                       if(mapInd <0){
                        mapInd = 2;
@@ -430,6 +435,7 @@ if (player.faceLeft[num] === true){
                           map.tiles.push(maps[mapInd][i])
                           
                         }
+
                       // map.tiles = maps[mapInd];
                       // player.tiles = playerMaps[mapInd];
                       
@@ -440,7 +446,11 @@ if (player.faceLeft[num] === true){
                   //right
                       if (gameState === "start") {
                         player.playerRight(0);
-                      }else if (gameState === "select"){
+                      }else if (gameState === "select" && delay === false){
+                        delay = true;
+                        setTimeout(()=>{
+                          delay = false;
+                        },500);
                         mapInd++
                         if(mapInd >2){
                           mapInd = 0;
