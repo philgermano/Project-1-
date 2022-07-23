@@ -31,6 +31,83 @@ let tick = null;
 let moveDelay = null;
 let choice = "start";
 let gameState = "";
+let mapInd = 0;
+let playerMaps =[
+
+  
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 2, 4, 4, 2, 2, 0, 0,
+    0, 0, 2, 4, 2, 0, 2, 2, 2, 0, 0,
+    0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0,
+    0, 0, 2, 2, 2, 0, 2, 4, 2, 0, 0,
+    0, 0, 4, 0, 2, 4, 2, 2, 2, 0, 0, 
+    0, 0, 2, 2, 2, 4, 2, 0, 1, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+  ],
+
+  
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+    0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 
+    0, 0, 2, 2, 2, 2, 2, 2, 1, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, 4, 2, 4, 4, 2, 2, 0, 0,
+      0, 0, 2, 2, 4, 4, 2, 4, 4, 0, 0,
+      0, 0, 4, 4, 2, 4, 4, 2, 2, 0, 0,
+      0, 0, 2, 4, 2, 4, 4, 2, 4, 0, 0,
+      0, 0, 4, 4, 4, 4, 2, 4, 2, 0, 0, 
+      0, 0, 2, 4, 2, 4, 4, 2, 1, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+
+];
+
+let maps = [
+
+  
+   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
+    0, 101, 1, 101, 1, 1, 1, 1, 1, 101, 0,
+    0, 101, 17, 1, 17, 25, 25, 17, 17, 101, 0,
+    0, 101, 17, 25, 17, 101, 17, 17, 17, 101, 0,
+    0, 101, 17, 1, 1, 101, 1, 1, 17, 101, 0,
+    0, 101, 17, 17, 17, 1, 17, 25, 17, 101, 0,
+    0, 101, 25, 1, 17, 25, 17, 17, 17, 101, 0,
+    0, 101, 17, 17, 17, 25, 17, 101, 17, 101, 0,
+    0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0],
+    
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
+      0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
+      0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+      0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+      0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+      0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+      0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+      0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+      0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0],
+
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
+        0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
+        0, 101, 17, 25, 17, 25, 25, 17, 17, 101, 0,
+        0, 101, 17, 17, 25, 25, 17, 25, 25, 101, 0,
+        0, 101, 25, 25, 17, 25, 25, 17, 17, 101, 0,
+        0, 101, 17, 25, 17, 25, 25, 17, 25, 101, 0,
+        0, 101, 25, 25, 25, 25, 17, 25, 17, 101, 0,
+        0, 101, 17, 25, 17, 25, 25, 17, 17, 101, 0,
+        0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0],
+]
 ///////////////
 ////classes
 class bomb {
@@ -171,19 +248,16 @@ class explosion{
 ////MAPS
 
 
- const map = new levelMap([
-   
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
-  0, 101, 1, 101, 1, 1, 1, 1, 1, 101, 0,
-  0, 101, 17, 1, 17, 25, 25, 17, 17, 101, 0,
-  0, 101, 17, 25, 17, 101, 17, 17, 17, 101, 0,
-  0, 101, 17, 1, 1, 101, 1, 1, 17, 101, 0,
-  0, 101, 17, 17, 17, 1, 17, 25, 17, 101, 0,
-  0, 101, 25, 1, 17, 25, 17, 17, 17, 101, 0,
-  0, 101, 17, 17, 17, 25, 17, 101, 17, 101, 0,
-  0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0
-])
+ const map = new levelMap([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 1, 2, 2, 2, 2, 2, 2, 0, 0,
+  0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+  0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+  0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+  0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 
+  0, 0, 2, 2, 2, 2, 2, 2, 1, 0, 0, 
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
 const player = {
   /////num represent the player number
@@ -195,18 +269,16 @@ const player = {
   atlasRow: [1,1], 
   sprCol: [2,2],
   sprRow: [3,5],
-  tiles: [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 1, 0, 2, 4, 4, 2, 2, 0, 0,
-    0, 0, 2, 4, 2, 0, 2, 2, 2, 0, 0,
-    0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0,
-    0, 0, 2, 2, 2, 0, 2, 4, 2, 0, 0,
-    0, 0, 4, 0, 2, 4, 2, 2, 2, 0, 0, 
-    0, 0, 2, 2, 2, 4, 2, 0, 1, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-  ],
+  tiles: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
+    0, 101, 1, 1, 1, 1, 1, 1, 1, 101, 0,
+    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+    0, 101, 17, 17, 17, 17, 17, 17, 17, 101, 0,
+    0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0],
   
   playIndex: [24,85],
   playCol: [2,8],
@@ -340,12 +412,51 @@ if (player.faceLeft[num] === true){
                       }},
                   //tracks keys and actives functions for either player 1 or two
             movePlayer( {keyCode}){
-          if (keyCode === 37 && gameState === "start"){
-            //left
-            player.playerLeft(0);
-          }else if (keyCode === 39   && gameState === "start" ){
-            //right
-            player.playerRight(0);
+          if (keyCode === 37 ){
+                    if (gameState === "start") {
+                      player.playerLeft(0);
+                    }else if (gameState === "select"){
+                      mapInd--
+                      if(mapInd <0){
+                       mapInd = 2;
+                      };
+                        for (let i = 0; i < playerMaps[mapInd].length; i++) {
+                          player.tiles.shift()
+                          player.tiles.push(playerMaps[mapInd][i])
+                          
+                        };
+                        for (let i = 0; i < playerMaps[mapInd].length; i++) {
+                          map.tiles.shift()
+                          map.tiles.push(maps[mapInd][i])
+                          
+                        }
+                      // map.tiles = maps[mapInd];
+                      // player.tiles = playerMaps[mapInd];
+                      
+                      // console.log(player.tiles);
+                      // console.log(map.tiles);
+                    }
+          }else if (keyCode === 39){
+                  //right
+                      if (gameState === "start") {
+                        player.playerRight(0);
+                      }else if (gameState === "select"){
+                        mapInd++
+                        if(mapInd >2){
+                          mapInd = 0;
+                        };
+                        for (let i = 0; i < playerMaps[mapInd].length; i++) {
+                          player.tiles.shift()
+                          player.tiles.push(playerMaps[mapInd][i])
+                          
+                        };
+                        for (let i = 0; i < playerMaps[mapInd].length; i++) {
+                          map.tiles.shift()
+                          map.tiles.push(maps[mapInd][i])
+                        }
+                        // console.log(player.tiles);
+                        // console.log(map.tiles);
+                      }
           }else if ( keyCode === 38 ){
             //up
             if(gameState === "main"){
@@ -378,14 +489,19 @@ if (player.faceLeft[num] === true){
           }else if( keyCode === 32  && gameState === "start" ){
            //bomb player
            player.plantBomb(1);
+              //ENTER key
           }else if(keyCode === 13)
           if(choice === "start"){
             //clear menu. draw top thing and kick on draw map. and player spawn tick.
             choice = "";
             clearInterval(tick);
             menuCtx.clearRect(0, 0, canvas.width, canvas.height);
-            matchStart();
-          }else if(choice === "help" ){
+            mapSelect();
+          } else if(gameState === "select"){
+              //clear menu. draw top thing and kick on draw map. and player spawn tick.
+              matchStart();
+          
+        }else if(choice === "help" ){
             //clear menu and draw the game instructions
             choice = "";
             gameState = "help";
@@ -398,10 +514,11 @@ if (player.faceLeft[num] === true){
               gameStart();
               choice = "start";
           }else if(gameState === "over"){
+
+            console.log(maps[mapInd]);
+            console.log(playerMaps[mapInd]);
             matchReset();
           }
-          
-              
           } 
      }
             
@@ -431,6 +548,17 @@ drawBooms();
 },100)
 
 } 
+const mapSelect = () =>{
+  clearInterval(tick);
+  menuCtx.clearRect(0, 0, canvas.width, canvas.height);
+  menuCtx.fillStyle = "#555555";
+  menuCtx.fillRect(0 ,0,768 ,768 );
+  gameState = "select"
+  tick = setInterval(()=>{
+    ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
+map.drawMap();
+},100)
+}
 
 const displayHelp = () =>{
   clearInterval(tick);
@@ -549,19 +677,7 @@ const matchReset = () =>{
   player.atlasCol = [8, 8];
   player.atlasRow = [1,1];
   player.sprCol = [2,2];
-  player.sprRow = [3,5];
-  player.tiles = [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 1, 0, 2, 4, 4, 2, 2, 0, 0,
-    0, 0, 2, 4, 2, 0, 2, 2, 2, 0, 0,
-    0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0,
-    0, 0, 2, 2, 2, 0, 2, 4, 2, 0, 0,
-    0, 0, 4, 0, 2, 4, 2, 2, 2, 0, 0, 
-    0, 0, 2, 2, 2, 4, 2, 0, 1, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-  ];
+  player.sprRow = [3,5];;
   
   player.playIndex = [24,85];
   player.playCol = [2,8];
@@ -569,18 +685,16 @@ const matchReset = () =>{
   player.faceLeft = [false, false];
   player.timeDelay =[false,false];
 
-map.tiles = [   0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
-  0, 101, 1, 101, 1, 1, 1, 1, 1, 101, 0,
-  0, 101, 17, 1, 17, 25, 25, 17, 17, 101, 0,
-  0, 101, 17, 25, 17, 101, 17, 17, 17, 101, 0,
-  0, 101, 17, 1, 1, 101, 1, 1, 17, 101, 0,
-  0, 101, 17, 17, 17, 1, 17, 25, 17, 101, 0,
-  0, 101, 25, 1, 17, 25, 17, 17, 17, 101, 0,
-  0, 101, 17, 17, 17, 25, 17, 101, 17, 101, 0,
-  0,  1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0
-];
-
+ 
+  for (let i = 0; i < playerMaps[mapInd].length; i++) {
+    player.tiles.shift();
+    player.tiles.push(playerMaps[mapInd][i]);
+    
+  };
+  for (let i = 0; i < playerMaps[mapInd].length; i++) {
+    map.tiles.shift();
+    map.tiles.push(maps[mapInd][i]);
+  }    
 
   matchStart();
 }
