@@ -9,12 +9,9 @@ cache image {
 }
 
 body{
-    background-color: gray;
+    background-color: whitesmoke;
 }
 
-#game{
-
-}
 
 #myCanvas{
     position:absolute;

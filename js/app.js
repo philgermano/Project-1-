@@ -690,17 +690,7 @@ const drawBooms = ()=>{
  
 
 
-//  map.drawMap();
-//  player.drawPlayer(0);
- 
-//  tick = setInterval(()=>{
-//           ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
-//   playCtx.clearRect(0, 0, canvas.width, canvas.height);
-//   player.drawPlayer(0);
-//   player.drawPlayer(1);
-//   drawBombs();
-//   drawBooms();
-//  },100)
+
 
 gameStart();
 
@@ -957,5 +947,17 @@ document.addEventListener("keydown", player.movePlayer);
 //   }
 //     imgLoaded = true;
 // }  
+
+//  map.drawMap();
+//  player.drawPlayer(0);
+ 
+//  tick = setInterval(()=>{
+//           ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
+//   playCtx.clearRect(0, 0, canvas.width, canvas.height);
+//   player.drawPlayer(0);
+//   player.drawPlayer(1);
+//   drawBombs();
+//   drawBooms();
+//  },100)
 
 //#endregion
