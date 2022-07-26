@@ -249,7 +249,8 @@ class explosion{
 ////MAPS
 
 
- const map = new levelMap([0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
+ const map = new levelMap(
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 
   0, 101, 1, 101, 1, 1, 1, 1, 1, 101, 0,
   0, 101, 17, 1, 17, 25, 25, 17, 17, 101, 0,
   0, 101, 17, 25, 17, 101, 17, 17, 17, 101, 0,
@@ -330,22 +331,22 @@ if (player.faceLeft[num] === true){
 
       playCtx.restore();
 
-} else {
-    playCtx.drawImage(
-              img, // image source
-              sourceX, // x on tilemap to cut from
-              sourceY, // y on tilemap to cut from
-                  player.tSize, // source tile width
-                  player.tSize, // source tile height
-                  player.playCol[num] * (player.mSize * player.tSize), // target x on canvas
-                  player.playRow[num] * (player.mSize * player.tSize), // target y on canvas
-                  player.mSize * player.tSize , // target width on canvas
-                  player.mSize * player.tSize // target height on canvas
-                )
-            }
-          },
-                  //player movement for moving
-                  ///activates delayMove, changes current tile to open and moves player location on map and his other tracking variables. Also changes sprite index.
+                  } else {
+              playCtx.drawImage(
+                        img, // image source
+                        sourceX, // x on tilemap to cut from
+                        sourceY, // y on tilemap to cut from
+                            player.tSize, // source tile width
+                            player.tSize, // source tile height
+                            player.playCol[num] * (player.mSize * player.tSize), // target x on canvas
+                            player.playRow[num] * (player.mSize * player.tSize), // target y on canvas
+                            player.mSize * player.tSize , // target width on canvas
+                            player.mSize * player.tSize // target height on canvas
+                          )
+                      }
+                    },
+                            //player movement for moving
+                            ///activates delayMove, changes current tile to open and moves player location on map and his other tracking variables. Also changes sprite index.
             playerRight: (num) =>{
                 if (player.tiles[player.playIndex[num] +1] === 2 && player.timeDelay[num] === false){
                     player.delayMove(num);
@@ -526,8 +527,8 @@ if (player.faceLeft[num] === true){
               choice = "start";
           }else if(gameState === "over"){
 
-            console.log(maps[mapInd]);
-            console.log(playerMaps[mapInd]);
+            //console.log(maps[mapInd]);
+            //console.log(playerMaps[mapInd]);
             matchReset();
           }
           } 
@@ -564,6 +565,16 @@ const mapSelect = () =>{
   menuCtx.clearRect(0, 0, canvas.width, canvas.height);
   menuCtx.fillStyle = "#555555";
   menuCtx.fillRect(0 ,0,768 ,768 );
+  
+  menuCtx.fillStyle = "red";
+
+  menuCtx.fillText("← or →", (uiCtx.canvas.width* .5) -140 ,(uiCtx.canvas.height* .5) + 300 );
+  menuCtx.strokeText("← or →", (uiCtx.canvas.width* .5) -140 ,(uiCtx.canvas.height* .5) + 300);
+
+  menuCtx.fillText("Enter To Confirm", (uiCtx.canvas.width* .5) -350 ,(uiCtx.canvas.height* .5) + 360);
+  menuCtx.strokeText("Enter To Confirm", (uiCtx.canvas.width* .5) -350 ,(uiCtx.canvas.height* .5) + 360);
+
+
   gameState = "select"
   tick = setInterval(()=>{
     ///Set the game tick rate. essentially frame rate. every frame/tick it clears the player canvas and redraws the player, bombs, and explosions updating their states and positions each time.
